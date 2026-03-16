@@ -1,0 +1,38 @@
+{
+  "name": "@bluefission/reactor",
+  "version": "0.1.0",
+  "description": "Frontend primitives for Blue Fission internal applications.",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./response": "./src/core/response.js",
+    "./transport": "./src/core/transport.js",
+    "./module": "./src/core/module.js",
+    "./signals": "./src/core/signals.js",
+    "./dom": "./src/dom/binder.js",
+    "./jquery": "./src/adapters/jquery.js",
+    "./bluefission": "./src/adapters/bluefission.js",
+    "./opus-crud": "./src/adapters/opus-crud.js"
+  },
+  "files": [
+    "src",
+    "docs",
+    "README.md",
+    "SPEC.md",
+    "ARCHITECTURE.md",
+    "ROADMAP.md"
+  ],
+  "scripts": {
+    "check": "node --check src/index.js"
+  },
+  "keywords": [
+    "bluefission",
+    "frontend",
+    "jquery",
+    "opus",
+    "bluecore"
+  ],
+  "license": "UNLICENSED"
+}

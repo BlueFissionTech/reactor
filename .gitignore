@@ -1,0 +1,12 @@
+# Blue Fission Codex harness
+/docker/
+/scripts/
+/artifacts/
+/.codex/
+/AGENTS.md
+/AGENTS.behavior.md
+/harness.json
+/node_modules/
+/dist/
+/coverage/
+
