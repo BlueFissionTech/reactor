@@ -13,6 +13,7 @@ export {
 export {
   createTransport,
   createResource,
+  createResourceFromDefinition,
   createResourceRegistry
 } from "./core/transport.js";
 
@@ -22,6 +23,13 @@ export {
 } from "./core/module.js";
 
 export {
+  Events,
+  States,
+  BehavioralObject,
+  createBehavioralObject
+} from "./core/behavior.js";
+
+export {
   select,
   selectAll,
   bindText,
@@ -29,6 +37,50 @@ export {
   interpolate,
   on
 } from "./dom/binder.js";
+
+export {
+  El,
+  get,
+  set,
+  assign,
+  create
+} from "./dom/framework.js";
+
+export {
+  Template,
+  renderTemplate
+} from "./dom/template.js";
+
+export {
+  HttpRequest,
+  HttpResponse,
+  createHttpClient
+} from "./net/http.js";
+
+export {
+  createGateway,
+  createServiceClient
+} from "./services/service.js";
+
+export {
+  RecordSet,
+  createRecordSet
+} from "./data/record-set.js";
+
+export {
+  createPortletController
+} from "./ui/portlet.js";
+
+export {
+  createPanelRegistry
+} from "./ui/panels.js";
+
+export {
+  escapeHtml,
+  formatContent,
+  renderTable,
+  renderFormField
+} from "./html/helpers.js";
 
 export {
   createJQueryBridge,
@@ -44,3 +96,11 @@ export {
   createRecordModel,
   createCrudPanelModule
 } from "./adapters/opus-crud.js";
+
+export {
+  createActivityTracker
+} from "./browser/activity.js";
+
+export {
+  createSocketClient
+} from "./browser/socket.js";

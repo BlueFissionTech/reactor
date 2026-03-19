@@ -92,14 +92,20 @@ export function createResource(transport, endpoint) {
       return transport.post(endpoint, serializeModel(data), options);
     },
     update(id, data, options = {}) {
-      return transport.put(joinUrl(endpoint, String(id)), serializeModel(data), options);
+      const serialized = serializeModel(data);
+      if (serialized instanceof FormData) {
+        const payload = cloneFormDataWithMethod(serialized, "put");
+        return transport.post(joinUrl(endpoint, String(id)), payload, options);
+      }
+
+      return transport.put(joinUrl(endpoint, String(id)), serialized, options);
     },
     save(data, options = {}) {
       const serialized = serializeModel(data);
-      const id = serialized.id ?? serialized[`${singularKey(endpoint)}_id`];
+      const id = resolveResourceId(serialized, endpoint);
       return id == null
         ? transport.post(endpoint, serialized, options)
-        : transport.put(joinUrl(endpoint, String(id)), serialized, options);
+        : this.update(id, serialized, options);
     },
     remove(id, options = {}) {
       return transport.delete(joinUrl(endpoint, String(id)), null, options);
@@ -115,11 +121,29 @@ export function createResource(transport, endpoint) {
   };
 }
 
+export function createResourceFromDefinition(transport, definition, fallbackEndpoint = "resource") {
+  if (typeof definition === "string") {
+    return createResource(transport, definition);
+  }
+
+  if (!definition || typeof definition !== "object") {
+    throw new Error("createResourceFromDefinition requires a string endpoint or definition object.");
+  }
+
+  const endpoint = definition.endpoint || definition.path || fallbackEndpoint;
+  const resource = createResource(transport, endpoint);
+  resource.definition = definition;
+
+  attachActions(resource, transport, definition.actions || {});
+
+  return resource;
+}
+
 export function createResourceRegistry(transport, resources = {}) {
   const registry = {};
 
-  for (const [key, endpoint] of Object.entries(resources)) {
-    registry[key] = createResource(transport, endpoint);
+  for (const [key, definition] of Object.entries(resources)) {
+    registry[key] = createResourceFromDefinition(transport, definition, key);
   }
 
   return registry;
@@ -182,6 +206,63 @@ function serializeModel(value) {
   return output;
 }
 
+function resolveResourceId(value, endpoint) {
+  if (value == null) {
+    return null;
+  }
+
+  if (value instanceof FormData) {
+    return value.get("id") ?? value.get(`${singularKey(endpoint)}_id`);
+  }
+
+  if (typeof value !== "object") {
+    return null;
+  }
+
+  return value.id ?? value[`${singularKey(endpoint)}_id`] ?? null;
+}
+
+function cloneFormDataWithMethod(formData, method) {
+  const payload = new FormData();
+
+  formData.forEach((value, key) => {
+    payload.append(key, value);
+  });
+
+  if (!payload.has("_method")) {
+    payload.append("_method", method);
+  }
+
+  return payload;
+}
+
+function attachActions(resource, transport, actions = {}) {
+  for (const [name, definition] of Object.entries(actions)) {
+    resource[name] = async (input, options = {}) => {
+      if (typeof definition === "function") {
+        return definition({
+          input,
+          options,
+          resource,
+          transport
+        });
+      }
+
+      const action = normalizeActionDefinition(definition);
+      const method = action.method.toUpperCase();
+      const path = resolveActionPath(resource.endpoint, action.path, action.absolute);
+      const query = action.query ?? ((method === "GET" || method === "HEAD") ? input : undefined);
+      const data = action.data ?? ((method === "GET" || method === "HEAD") ? undefined : input);
+
+      return transport.request(endpointWithQuery(path, query), {
+        ...options,
+        method,
+        body: serializeModel(data)
+      });
+    };
+  }
+}
+
 function endpointWithQuery(endpoint, params) {
   if (!params || Object.keys(params).length === 0) {
     return endpoint;
@@ -200,6 +281,22 @@ function endpointWithQuery(endpoint, params) {
   return `${endpoint}?${search.toString()}`;
 }
 
+function normalizeActionDefinition(definition) {
+  if (typeof definition === "string") {
+    return {
+      path: definition,
+      method: "POST"
+    };
+  }
+
+  return {
+    path: "",
+    method: "POST",
+    absolute: false,
+    ...definition
+  };
+}
+
 function joinUrl(base, path) {
   const left = String(base || "").replace(/\/+$/, "");
   const right = String(path || "").replace(/^\/+/, "");
@@ -213,6 +310,18 @@ function joinUrl(base, path) {
   }
 
   return `${left}/${right}`;
+}
+
+function resolveActionPath(endpoint, actionPath, absolute = false) {
+  if (!actionPath) {
+    return endpoint;
+  }
+
+  if (absolute || String(actionPath).startsWith("/")) {
+    return actionPath;
+  }
+
+  return joinUrl(endpoint, actionPath);
 }
 
 function resolveValue(value) {
