@@ -17,9 +17,10 @@ import {
 } from "../dom/binder.js";
 
 export function createBlueFissionApi(options = {}) {
+  const csrfToken = options.csrfToken ?? readCsrfToken;
   const transport = createTransport({
     baseUrl: options.apiBaseUrl || "/api",
-    csrfToken: options.csrfToken || readCsrfToken,
+    csrfToken,
     fetchImpl: options.fetchImpl,
     defaultHeaders: options.defaultHeaders,
     onRequest: options.onRequest,
@@ -32,7 +33,7 @@ export function createBlueFissionApi(options = {}) {
     fetchImpl: options.fetchImpl,
     defaultHeaders: options.defaultHeaders,
     requestProcessors: [
-      createCsrfProcessor(options.csrfToken || readCsrfToken),
+      createCsrfProcessor(csrfToken),
       ...(options.requestProcessors || [])
     ],
     responseProcessors: options.responseProcessors || []
@@ -98,8 +99,8 @@ export function createBlueFissionApp(options = {}) {
 }
 
 function readCsrfToken() {
-  return document
-    .querySelector('meta[name="csrf-token"]')
+  return globalThis.document
+    ?.querySelector('meta[name="csrf-token"]')
     ?.getAttribute("content");
 }
 

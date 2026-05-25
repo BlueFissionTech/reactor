@@ -278,10 +278,11 @@ It now has:
 - evented object and record-set primitives for legacy dashboard migrations
 - a lightweight signal and DOM binding model
 - an extracted Opus CRUD adapter
+- baseline automated tests for response normalization, service gateways, evented objects, and Blue Fission API bootstrap
 
 It still needs:
 
-- automated tests
+- broader automated coverage for DOM helpers, templates, record sets, and UI adapters
 - a dashboard shell adapter
 - richer HTML decorators and form adapters
 - validation against a real framework module migration

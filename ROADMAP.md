@@ -3,7 +3,7 @@
 ## Near term
 
 - Stabilize the package API and usage examples.
-- Add tests for response normalization, CRUD resources, and signals.
+- Expand tests across CRUD resources, signals, DOM helpers, templates, record sets, and UI adapters.
 - Add a dashboard shell adapter for Opus navigation patterns.
 - Add richer form and HTML helpers for Blue Fission validation and submission flows.
 - Validate the Opus CRUD adapter against one real module migration in `framework`.
