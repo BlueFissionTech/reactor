@@ -1,15 +1,10 @@
-# Opus Migration Notes
+# Legacy CRUD Migration Notes
 
 ## What was extracted
 
-The first extracted legacy pattern is the repeated admin CRUD module flow used in Opus modules such as:
+The first extracted legacy pattern is the repeated admin CRUD module flow used across internal dashboards and admin screens.
 
-- `module-content.js`
-- `module-entries.js`
-- `module-students.js`
-- `addons/students/resource/src/dashboard.js`
-
-Those modules all repeat the same structure:
+Those modules often repeat the same structure:
 
 - define a record model with reactive fields
 - show a listing view and an edit view
@@ -38,11 +33,11 @@ Use:
 - `createJQueryBridge`
 - `createBlueFissionApp`
 
-This keeps the same operational flow while moving the reusable behavior into Reactor.
+This keeps the same operational flow while moving reusable behavior into Reactor. It is a migration aid, not a required project layout.
 
 ## Mapping
 
-Legacy patterns map to Reactor like this:
+Legacy patterns can map to Reactor like this:
 
 - `new Model` + many `new Reactor(...)` fields -> `createRecordModel(...)`
 - repeated screen swap functions -> `createCrudPanelModule(...screens)`
@@ -53,41 +48,41 @@ Legacy patterns map to Reactor like this:
 - `dashboard-ui/record-set.js` -> `createRecordSet(...)`
 - `dashboard-ui/portlet-ui.js` -> `createPortletController(...)`
 
-## Example direction
+## Example Direction
 
-An old `module-content.js` style module can become:
+A conventional resource module can become:
 
 ```js
 const model = createRecordModel({
-  content_id: 0,
+  id: 0,
   title: "",
   description: "",
-  is_published: 0
+  status: ""
 });
 
-const contentModule = createCrudPanelModule({
-  name: "content",
-  resource: app.resources.content,
+const resourceModule = createCrudPanelModule({
+  name: "resource-workspace",
+  resource: app.resources.item,
   model,
   bridge: createJQueryBridge(window.jQuery),
   ui: app.ui,
   screens: {
-    list: "#content-listing-screen",
-    edit: "#content-edit-screen"
+    list: "[data-screen='list']",
+    edit: "[data-screen='edit']"
   },
   selectors: {
-    homeButton: ".home-btn",
-    addButton: "#content-add-btn",
-    saveButton: "#content-save-btn",
-    deleteButton: "#content-delete-btn",
-    showButton: ".show-btn",
-    editButton: ".edit-btn"
+    homeButton: "[data-action='home']",
+    addButton: "[data-action='add']",
+    saveButton: "[data-action='save']",
+    deleteButton: "[data-action='delete']",
+    showButton: "[data-action='show']",
+    editButton: "[data-action='edit']"
   },
   list: {
-    root: "#dataTable",
-    selector: "#dataTable",
+    root: "[data-resource-list]",
+    selector: "[data-resource-list]",
     getRecord(trigger) {
-      return window.contentTable.row(window.jQuery(trigger).parents("tr")).data();
+      return window.resourceTable.row(window.jQuery(trigger).parents("tr")).data();
     }
   }
 });

@@ -9,7 +9,7 @@ test("normalizes DevElation-style response envelopes", () => {
     data: { id: 42, name: "Ada" },
     list: [{ id: 1 }],
     id: 42,
-    query: "students",
+    query: "items",
     children: [{ id: 43 }],
     meta: { page: 1 }
   };
@@ -21,7 +21,7 @@ test("normalizes DevElation-style response envelopes", () => {
   assert.deepEqual(response.data, { id: 42, name: "Ada" });
   assert.deepEqual(response.list, [{ id: 1 }]);
   assert.equal(response.id, 42);
-  assert.equal(response.query, "students");
+  assert.equal(response.query, "items");
   assert.deepEqual(response.children, [{ id: 43 }]);
   assert.deepEqual(response.meta, { page: 1 });
   assert.equal(response.raw, payload);

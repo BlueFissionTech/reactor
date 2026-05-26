@@ -1,21 +1,16 @@
 # Legacy Script Coverage
 
-This note maps the older `resource/src/js/modules/scripts` utilities from `control-hub` and related projects into Reactor.
+This note maps older shared browser utilities into Reactor without prescribing a downstream project layout.
 
-## Original source area checked
+## Source Shape Reviewed
 
-The direct source area reviewed for this mapping was:
+The source areas reviewed for this mapping included:
 
-- `D:\projects\control-hub\resource\src\js\modules\scripts`
-
-I also checked related usage in:
-
-- `D:\projects\control-hub\resource\src\js\app.js`
-- `D:\projects\control-hub\resource\src\js\modules\app\*`
-- `D:\projects\control-hub\resource\src\js\modules\dashboard-ui\*`
-- `D:\projects\control-hub\addons\students\resource\src\*`
-- `D:\projects\control-hub\resource\src\js\pages\index.js`
-- `D:\projects\control-hub\resource\markup\admin\panels\*`
+- shared DOM helper scripts
+- app bootstrap modules
+- dashboard utility modules
+- resource-oriented modules
+- server-rendered panel markup
 
 ## Coverage map
 
@@ -97,7 +92,7 @@ Export:
 
 ## Related `dashboard-ui` utility coverage
 
-While these are not in the `scripts` directory, they were part of the same practical authoring style in the older addons:
+While these are not low-level browser scripts, they were part of the same practical authoring style in older project modules:
 
 ### `record-set.js`
 
@@ -131,7 +126,7 @@ Export:
 
 ## Template format detail
 
-The real pattern in the inspected control-hub and framework markup is selector-addressed template fragments, typically:
+The useful general pattern is selector-addressed template fragments, typically:
 
 ```html
 <script type="text/template" id="credential-status-list-item">
@@ -164,22 +159,17 @@ The helper:
 
 That means the template is not a live reactive renderer by itself. The "real time" behavior comes from app code repeatedly calling `render(...)` and then appending or swapping the resulting markup as data changes.
 
-## Concrete example checked
+## Concrete Pattern
 
-The most useful concrete example reviewed was:
+This pattern usually looks like:
 
-- markup: `D:\projects\control-hub\addons\basiccontact\resource\markup\default\admin\panels\index.html`
-- module: `D:\projects\control-hub\addons\basiccontact\resource\src\module-basiccontact.js`
-
-That pair shows the real pattern clearly:
-
-- `#contact-detail-display-item` is defined as a `<script type="text/template">` block
-- the module reads a contact record
+- a detail template is defined as a `<script type="text/template">` block
+- the module reads a resource record
 - the model is updated from the API response
 - `Template.render()` is called
-- `Template.swap('#contact-details')` replaces the existing preview section with rendered detail markup
+- `Template.swap(...)` replaces the existing preview section with rendered detail markup
 
-That is the behavior downstream consumers such as `aidea` need to understand.
+That is the behavior downstream consumers need to understand.
 
 ## Important boundary
 

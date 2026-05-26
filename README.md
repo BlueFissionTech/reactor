@@ -2,7 +2,7 @@
 
 Reactor is the shared frontend foundation for Blue Fission internal products.
 
-It exists to replace copied, project-local JavaScript with a package that has a clear API, a stable mental model, and a practical migration path from the current Opus and BlueCore-adjacent frontend code. Today that means embracing the reality of jQuery-heavy dashboards while moving the reusable parts of the system into framework-agnostic primitives.
+It exists to replace copied, project-local JavaScript with a package that has a clear API, a stable mental model, and a practical migration path from current Blue Fission frontend code. Today that means supporting legacy jQuery-heavy screens while moving reusable behavior into framework-agnostic primitives.
 
 ## What Reactor is
 
@@ -22,7 +22,7 @@ Reactor is a small internal library for:
 Reactor is not trying to be:
 
 - a full UI framework
-- a complete replacement for every current Opus widget
+- a complete replacement for every current dashboard widget
 - a forced rewrite away from jQuery
 - a compiled frontend runtime with heavy build requirements
 
@@ -32,10 +32,10 @@ The point is to centralize the stable patterns first, then modernize the rest fr
 
 Right now, Blue Fission frontend behavior is split across several places:
 
-- Opus utility code in `framework/resource/src/js/modules/scripts`
+- reusable utility code in existing internal frontend modules
 - app-level modules in `framework/resource/src/js/modules/app`
 - dashboard behavior in `framework/resource/src/js/modules/dashboard-ui`
-- project-specific copies and forks such as `hoom-addon/resource/src`
+- project-specific copies and forks
 
 Those codebases share the same ideas:
 
@@ -58,7 +58,7 @@ It already has:
 - scope and acceptance criteria in `SPEC.md`
 - a system view in `ARCHITECTURE.md`
 - a roadmap in `ROADMAP.md`
-- an Opus migration note in `docs/opus-migration.md`
+- migration notes for legacy module composition
 
 It was missing:
 
@@ -78,7 +78,7 @@ Reactor is organized around three layers:
 2. Browser binding
    Small DOM helpers for simple reactive behavior without introducing a full renderer.
 3. Adapters
-   Compatibility layers for Blue Fission conventions, jQuery-heavy screens, and extracted Opus patterns.
+   Compatibility layers for Blue Fission conventions, jQuery-heavy screens, and extracted legacy patterns.
 
 That separation matters. It lets us keep legacy integration support without hard-coding legacy assumptions into the permanent center of the library.
 
@@ -147,7 +147,7 @@ const app = createBlueFissionApp({
   apiBaseUrl: "/api",
   resources: {
     user: "users",
-    addon: "admin/addons"
+    report: "reports"
   }
 });
 
@@ -175,11 +175,11 @@ For direct browser usage inside internal repos, ESM imports also work:
 </script>
 ```
 
-## Extracted Opus pattern
+## Extracted CRUD Pattern
 
-The first concrete extraction in Reactor is the repeated Opus CRUD admin panel flow.
+One concrete compatibility adapter in Reactor is a repeated CRUD admin panel flow.
 
-That adapter captures the recurring shape seen in modules like content, entries, and students:
+That adapter captures the recurring shape used by many internal screens:
 
 - a reactive record model
 - listing and edit screens
@@ -191,31 +191,29 @@ That adapter captures the recurring shape seen in modules like content, entries,
 Relevant files:
 
 - `src/adapters/opus-crud.js`
-- `examples/opus-content-module.js`
+- `examples/crud-panel-module.js`
 - `docs/opus-migration.md`
 
-## Students-style addon pattern
+## General Module Composition
 
-The older addon bootstrap used in projects like `control-hub` is now represented more directly too.
-
-Reactor now gives that pattern a cleaner home through:
+Reactor supports a general module composition pattern through:
 
 - action-aware resource definitions on `createBlueFissionApi` and `createBlueFissionApp`
 - legacy-style `app.get`, `app.set`, `app.assign`, and `app.computed` helpers
 - `RecordSet` for list-oriented state
 - `createPanelRegistry` for panel bootstrapping
 - `createPortletController` for portlet collapse and removal behavior
-- `Template` for the real `text/template` render-and-swap flow
+- `Template` for selector-addressed render-and-swap flows
 
 Relevant files:
 
-- `examples/students-addon.js`
-- `docs/addon-module-patterns.md`
+- `examples/resource-workspace.js`
+- `docs/module-composition.md`
 - `docs/develation-alignment.md`
 
 ## Legacy script coverage
 
-I also checked the original `control-hub` scripts area directly and pulled the missing reusable concepts into Reactor:
+I also checked older shared script patterns and pulled reusable concepts into Reactor:
 
 - `framework.js`
   now represented by `src/dom/framework.js`
@@ -248,8 +246,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   first practical steps and composition patterns
 - `docs/api-reference.md`
   current public API summary
-- `docs/addon-module-patterns.md`
-  migration map for older addon/module code such as `students.js`
+- `docs/module-composition.md`
+  general composition guidance for resources, records, panels, and optional compatibility adapters
 - `docs/develation-alignment.md`
   how Reactor aligns with DevElation service, net, html, and object patterns
 - `docs/legacy-script-coverage.md`
@@ -257,7 +255,7 @@ This is an internal platform library. Its value is not novelty. Its value is red
 - `docs/dashboard-ui-interop.md`
   status of legacy `dashboard-ui` features and how they relate to jQuery
 - `docs/opus-migration.md`
-  mapping from legacy Opus module patterns to Reactor
+  compatibility notes for older CRUD-oriented module patterns
 - `SPEC.md`
   product scope, users, and acceptance criteria
 - `ARCHITECTURE.md`
@@ -277,7 +275,7 @@ It now has:
 - a DevElation-aligned request, response, and gateway layer
 - evented object and record-set primitives for legacy dashboard migrations
 - a lightweight signal and DOM binding model
-- an extracted Opus CRUD adapter
+- an extracted CRUD panel adapter
 - baseline automated tests for response normalization, service gateways, evented objects, and Blue Fission API bootstrap
 
 It still needs:

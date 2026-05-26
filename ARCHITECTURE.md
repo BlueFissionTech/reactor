@@ -95,14 +95,14 @@ Plugins can extend the module context without forcing a framework choice.
 
 ## Interop direction
 
-Legacy Opus code currently mixes:
+Legacy dashboard code currently mixes:
 
 - direct DOM mutation
 - jQuery event binding
 - AJAX wrappers
 - window-global app objects
 
-Older addon modules also mixed:
+Older project modules also mixed:
 
 - custom resource actions added at runtime
 - anonymous record sets
@@ -129,6 +129,6 @@ Reactor keeps compatibility available through adapters, but the architectural ta
 
 ## Extracted legacy pattern
 
-The first extracted legacy pattern is the common Opus CRUD admin panel flow. Historically this logic was rewritten in modules such as `module-content.js`, `module-entries.js`, and `module-students.js`. Reactor now provides a reusable adapter for that shape so projects can standardize around one implementation while keeping the current UI stack.
+One extracted legacy pattern is the common CRUD admin panel flow. Historically this logic was rewritten across project-local modules. Reactor now provides a reusable adapter for that shape so projects can standardize around one implementation while keeping the current UI stack.
 
 `dashboard-ui` itself is only partially represented so far. Reactor currently exposes the jQuery-facing bridge surface that supports parts of that world, but it does not yet contain a full dashboard shell adapter for navigation, tab management, prompts, session timeout behavior, or rich screen orchestration. That boundary should stay explicit in the docs so consumers know what is extracted already versus what remains legacy.

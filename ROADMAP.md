@@ -4,14 +4,14 @@
 
 - Stabilize the package API and usage examples.
 - Expand tests across CRUD resources, signals, DOM helpers, templates, record sets, and UI adapters.
-- Add a dashboard shell adapter for Opus navigation patterns.
+- Add a dashboard shell adapter for reusable navigation patterns.
 - Add richer form and HTML helpers for Blue Fission validation and submission flows.
-- Validate the Opus CRUD adapter against one real module migration in `framework`.
-- Validate the students-style addon and dashboard pattern against a real `control-hub` migration.
+- Validate the CRUD adapter against one real module migration without baking downstream layout into Reactor.
+- Validate general module composition against a real internal migration while keeping examples domain-neutral.
 
 ## Mid term
 
-- Extract reusable UI patterns from existing Opus modules.
+- Extract reusable UI patterns from existing internal modules.
 - Provide adapters for DataTables, modal flows, and notifications.
 - Replace document-ready global bootstrapping with explicit app startup patterns.
 - Expand DevElation-aligned request and object semantics where that improves interop without coupling.
@@ -21,5 +21,5 @@
 
 - Reduce the hard dependency on jQuery in app code.
 - Introduce optional renderer integrations for more modern component models.
-- Align more directly with BlueCore-generated modules and Opus platform conventions.
+- Align more directly with BlueCore-generated modules and platform conventions.
 - Offer migration guides from legacy copied modules to Reactor-based packages.

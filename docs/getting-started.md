@@ -2,7 +2,7 @@
 
 ## Who this is for
 
-This guide is for Blue Fission developers who want to start using Reactor inside an internal app, dashboard, or extracted Opus module.
+This guide is for Blue Fission developers who want to start using Reactor inside an internal app, dashboard, or reusable module.
 
 ## Start with the right expectation
 
@@ -27,8 +27,8 @@ Do not expect it to replace every existing dashboard behavior on day one.
 2. Register the resources your screen needs.
 3. Use signals for local state.
 4. Bind state to the DOM with `bindText` or `bindValue`.
-5. If you are migrating old Opus admin modules, use `createRecordModel` and `createCrudPanelModule`.
-6. If you are migrating older addon modules, use action-aware resources, `RecordSet`, panel registration, and the app-level `get` / `set` / `assign` helpers.
+5. If you are migrating a list/edit admin screen, consider `createRecordModel` and `createCrudPanelModule`.
+6. If you need a composed module surface, use action-aware resources, `RecordSet`, panel registration, and the app-level `get` / `set` / `assign` helpers.
 7. If you are migrating older low-level script utilities, use the framework, template, activity, and socket helpers in Reactor instead of copying project-local files.
 
 ## Basic app setup
@@ -43,7 +43,7 @@ import {
 const app = createBlueFissionApp({
   apiBaseUrl: "/api",
   resources: {
-    content: "admin/content",
+    item: "items",
     user: "admin/users"
   }
 });
@@ -78,17 +78,17 @@ const active = createSignal(8);
 const inactive = computed(() => total.value - active.value, [total, active]);
 ```
 
-## Building a students-style addon
+## Composing A Resource Workspace
 
-The older addon pattern usually had:
+A common resource workspace usually needs:
 
 - one global app object
-- one API object with ad hoc custom actions
+- one API object with custom resource actions
 - one form model
 - one list-level record set
 - one panel map
 
-Reactor now supports that shape directly:
+Reactor supports that shape without assuming a downstream file layout:
 
 ```js
 import {
@@ -100,47 +100,47 @@ import {
 const app = createBlueFissionApp({
   apiBaseUrl: "/api",
   resources: {
-    student: {
-      endpoint: "students",
+    item: {
+      endpoint: "items",
       actions: {
-        recentAtRisk: {
-          path: "recent_at_risk",
+        recent: {
+          path: "recent",
           method: "GET"
         },
-        generate: "generate"
+        archive: "archive"
       }
     }
   }
 });
 
-const student = createRecordModel({
-  student_id: 0,
-  first_name: "",
-  last_name: "",
-  email: ""
+const item = createRecordModel({
+  id: 0,
+  title: "",
+  owner: "",
+  status: ""
 });
 
-const students = createRecordSet([], {
-  idKey: "student_id",
+const items = createRecordSet([], {
+  idKey: "id",
   fetcher: async () => {
-    const response = await app.resources.student.list();
+    const response = await app.resources.item.list();
     return response.list;
   }
 });
 
-app.assign("first_name", student.first_name);
-app.set(".student-email-field", student.email, "value");
+app.assign("title", item.title);
+app.set("[data-field='title']", item.title, "value");
 ```
 
 Read:
 
-- `docs/addon-module-patterns.md`
-- `examples/students-addon.js`
+- `docs/module-composition.md`
+- `examples/resource-workspace.js`
 - `docs/develation-alignment.md`
 
-## Migrating an Opus CRUD panel
+## Migrating A CRUD Panel
 
-Use the Opus CRUD adapter when the existing screen has the familiar pattern:
+Use the CRUD panel adapter when the existing screen has the familiar pattern:
 
 - a DataTable-backed list
 - an edit form screen
@@ -156,34 +156,35 @@ import {
 } from "@bluefission/reactor";
 
 const model = createRecordModel({
-  content_id: 0,
+  id: 0,
   title: "",
-  description: ""
+  description: "",
+  status: ""
 });
 
 const module = createCrudPanelModule({
-  name: "content",
-  resource: app.resources.content,
+  name: "resource-workspace",
+  resource: app.resources.item,
   model,
   bridge: createJQueryBridge(window.jQuery),
   ui: app.ui,
   screens: {
-    list: "#content-listing-screen",
-    edit: "#content-edit-screen"
+    list: "[data-screen='list']",
+    edit: "[data-screen='edit']"
   },
   selectors: {
-    homeButton: ".home-btn",
-    addButton: "#content-add-btn",
-    saveButton: "#content-save-btn",
-    deleteButton: "#content-delete-btn",
-    showButton: ".show-btn",
-    editButton: ".edit-btn"
+    homeButton: "[data-action='home']",
+    addButton: "[data-action='add']",
+    saveButton: "[data-action='save']",
+    deleteButton: "[data-action='delete']",
+    showButton: "[data-action='show']",
+    editButton: "[data-action='edit']"
   },
   list: {
-    root: "#dataTable",
-    selector: "#dataTable",
+    root: "[data-resource-list]",
+    selector: "[data-resource-list]",
     getRecord(trigger) {
-      return window.contentTable.row(window.jQuery(trigger).parents("tr")).data();
+      return window.resourceTable.row(window.jQuery(trigger).parents("tr")).data();
     }
   }
 });
@@ -193,6 +194,6 @@ const module = createCrudPanelModule({
 
 1. Read `README.md` for intent and positioning.
 2. Read `docs/api-reference.md` to see the actual exported API.
-3. Read `docs/addon-module-patterns.md` if you are replacing existing addon module code.
-4. Read `docs/opus-migration.md` if you are replacing existing Opus module code.
+3. Read `docs/module-composition.md` if you are composing resources, records, panels, and bindings.
+4. Read `docs/opus-migration.md` if you are replacing legacy CRUD-oriented module code.
 5. Read `ARCHITECTURE.md` if you are making library-level design decisions.

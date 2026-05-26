@@ -46,14 +46,14 @@ Builds a CRUD resource from either:
 Example:
 
 ```js
-const student = createResourceFromDefinition(transport, {
-  endpoint: "students",
+const item = createResourceFromDefinition(transport, {
+  endpoint: "items",
   actions: {
-    recentAtRisk: {
-      path: "recent_at_risk",
+    recent: {
+      path: "recent",
       method: "GET"
     },
-    generate: "generate"
+    archive: "archive"
   }
 });
 ```
@@ -198,8 +198,8 @@ Creates a wrapped DOM element.
 Selector-driven template helper for the observed legacy pattern:
 
 ```html
-<script type="text/template" id="student-detail-display-item">
-  <div>{{ first_name }} {{ last_name }}</div>
+<script type="text/template" id="resource-detail">
+  <div>{{ title }}</div>
 </script>
 ```
 
@@ -395,7 +395,7 @@ Extra methods:
 
 ### `createCrudPanelModule(options)`
 
-Reusable CRUD module for Opus-style admin screens.
+Reusable CRUD module for conventional admin screens.
 
 Supports:
 

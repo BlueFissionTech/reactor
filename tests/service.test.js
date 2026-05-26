@@ -53,7 +53,7 @@ test("service client mirrors DevElation request and response processor stages", 
     ]
   });
 
-  const result = await service.get("students", {}, { traceId: "abc123" });
+  const result = await service.get("items", {}, { traceId: "abc123" });
 
   assert.equal(sent[0].method, "GET");
   assert.deepEqual(sent[0].headers, { "X-Trace": "abc123" });

@@ -2,12 +2,12 @@
 
 ## Purpose
 
-Reactor provides the shared frontend foundation for Blue Fission internal products. It should absorb the reusable parts of current Opus and addon JavaScript while reducing duplication, clarifying conventions, and making internal projects easier to compose.
+Reactor provides the shared frontend foundation for Blue Fission internal products. It should absorb reusable frontend patterns while reducing duplication, clarifying conventions, and making internal projects easier to compose.
 
 ## Primary users
 
 - Blue Fission developers building admin dashboards or internal SaaS interfaces
-- Opus applications that currently depend on copied `resource/src/js/modules/*` code
+- internal applications that currently depend on copied frontend module code
 - BlueCore-backed projects that need a predictable frontend contract
 - Legacy jQuery-first apps that need a migration path rather than a rewrite
 
@@ -26,7 +26,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - The library includes a response normalizer that understands Blue Fission payload shapes such as `data`, `status`, `list`, `id`, `query`, and `children`.
 - The library includes a transport layer with fetch-based requests and CRUD resource helpers.
 - The library includes a lightweight reactive primitive for state and DOM binding.
-- The library includes a module lifecycle abstraction suitable for Opus-style dashboard modules.
+- The library includes a module lifecycle abstraction suitable for dashboard and admin modules.
 - The library includes a jQuery interoperability layer so existing apps can adopt it immediately.
 - The design explicitly treats jQuery as a compatibility layer, not the long-term core.
 
@@ -35,13 +35,13 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - Recreating every existing dashboard widget or screen helper
 - Providing a full framework-specific renderer
 - Shipping a compiled browser bundle
-- Replacing all current Opus modules in one pass
+- Replacing all current product-specific modules in one pass
 
 ## Integration rules
 
 - Prefer npm package consumption.
 - Allow direct ESM inclusion for internal repos that are not yet package-driven.
-- Keep payload conventions compatible with BlueCore and Opus APIs.
+- Keep payload conventions compatible with Blue Fission APIs.
 - Avoid hard-coding one backend framework beyond the current Blue Fission response contract.
 
 ## Initial modules
@@ -53,4 +53,4 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - DOM binding
 - jQuery bridge
 - Blue Fission app bootstrap
-- Opus CRUD panel adapter for repeated admin module flows
+- CRUD panel adapter for repeated admin module flows

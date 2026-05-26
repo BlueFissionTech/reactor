@@ -15,28 +15,28 @@ test("Blue Fission API bootstrap is safe without a browser document", async () =
       });
     },
     resources: {
-      student: {
-        endpoint: "students",
+      item: {
+        endpoint: "items",
         actions: {
-          atRisk: {
-            path: "at_risk",
+          recent: {
+            path: "recent",
             method: "GET"
           },
-          generate: "generate"
+          archive: "archive"
         }
       }
     }
   });
 
-  const atRisk = await api.resources.student.atRisk({ limit: 3 });
-  const generated = await api.resources.student.generate({ id: 1 });
+  const recent = await api.resources.item.recent({ limit: 3 });
+  const archived = await api.resources.item.archive({ id: 1 });
 
-  assert.deepEqual(atRisk.data, { id: 1 });
-  assert.equal(requests[0].url, "/api/students/at_risk?limit=3");
+  assert.deepEqual(recent.data, { id: 1 });
+  assert.equal(requests[0].url, "/api/items/recent?limit=3");
   assert.equal(requests[0].request.method, "GET");
-  assert.equal(requests[1].url, "/api/students/generate");
+  assert.equal(requests[1].url, "/api/items/archive");
   assert.equal(requests[1].request.method, "POST");
   assert.equal(requests[1].request.headers.get("Content-Type"), "application/json");
   assert.equal(requests[1].request.body, "{\"id\":1}");
-  assert.deepEqual(generated.data, { id: 1 });
+  assert.deepEqual(archived.data, { id: 1 });
 });

@@ -8,7 +8,7 @@ Reactor currently documents and implements the extracted CRUD module pattern and
 
 ## What `dashboard-ui` historically covered
 
-In the legacy Opus code, `dashboard-ui` is not just one concern. It bundles several responsibilities:
+In legacy dashboard code, `dashboard-ui` is not just one concern. It bundles several responsibilities:
 
 - notices and dialogs
 - menu click behavior
