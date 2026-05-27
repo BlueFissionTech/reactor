@@ -25,13 +25,14 @@
     "ROADMAP.md"
   ],
   "scripts": {
-    "check": "node --check src/index.js"
+    "check": "node --check src/index.js",
+    "test": "node --test"
   },
   "keywords": [
     "bluefission",
     "frontend",
     "jquery",
-    "opus",
+    "dashboard",
     "bluecore"
   ],
   "license": "UNLICENSED"

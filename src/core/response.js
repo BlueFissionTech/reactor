@@ -1,5 +1,5 @@
 const DEFAULT_RESPONSE = {
-  ok: true,
+  ok: null,
   status: "",
   statusCode: 200,
   data: null,
@@ -29,11 +29,11 @@ export function normalizeResponse(payload, options = {}) {
     raw
   };
 
-  response.ok = resolveOk(response, options);
   response.errors = normalizeErrors(response.errors, response);
   response.meta = response.meta && typeof response.meta === "object" ? response.meta : {};
   response.list = Array.isArray(response.list) ? response.list : [];
   response.children = Array.isArray(response.children) ? response.children : [];
+  response.ok = resolveOk(response, options);
 
   return response;
 }

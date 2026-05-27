@@ -1,51 +1,139 @@
 # Reactor
 
-Reactor is the new home for Blue Fission frontend primitives. It is intended to replace project-local copies of Opus and addon JavaScript with a documented package that works with BlueCore, Opus, DevElation-style responses, and current jQuery-heavy dashboards while moving toward a more framework-agnostic model.
+Reactor is the shared frontend foundation for Blue Fission internal products.
 
-## Goals
+It exists to replace copied, project-local JavaScript with a package that has a clear API, a stable mental model, and a practical migration path from current Blue Fission frontend code. Today that means supporting legacy jQuery-heavy screens while moving reusable behavior into framework-agnostic primitives.
 
-- Normalize Blue Fission response shapes in one place.
-- Provide a small transport layer for API and CRUD work.
-- Offer module lifecycle primitives for dashboard and app screens.
-- Support reactive DOM binding without locking the repo into jQuery.
-- Keep jQuery interoperability available for immediate adoption in existing projects.
+## What Reactor is
 
-## Current shape
+Reactor is a small internal library for:
 
-This first pass focuses on the shared foundation:
+- normalizing Blue Fission response payloads
+- calling backend APIs with a reusable transport and CRUD layer
+- expressing request and response flows with DevElation-style service objects
+- managing module lifecycle for admin and dashboard screens
+- modeling evented state and record collections without locking into one framework
+- binding lightweight reactive state to the DOM
+- rehoming legacy helpers such as templates, record sets, panels, and portlets
+- bridging current jQuery-first applications into a more structured architecture
 
-- `src/core/response.js`: response normalization for Blue Fission and generic JSON payloads
-- `src/core/transport.js`: fetch-based HTTP transport and CRUD resource client
-- `src/core/module.js`: module lifecycle and plugin hooks
-- `src/core/signals.js`: lightweight reactive values inspired by the existing `Reactor`
-- `src/dom/binder.js`: DOM binding and interpolation helpers
-- `src/adapters/jquery.js`: compatibility helpers for jQuery-first applications
-- `src/adapters/bluefission.js`: Blue Fission-oriented app bootstrap and API helpers
-- `src/adapters/opus-crud.js`: extracted Opus-style CRUD panel flow for admin modules
+## What Reactor is not
 
-## Installation
+Reactor is not trying to be:
 
-NPM is the preferred path:
+- a full UI framework
+- a complete replacement for every current dashboard widget
+- a forced rewrite away from jQuery
+- a compiled frontend runtime with heavy build requirements
+
+The point is to centralize the stable patterns first, then modernize the rest from a safer base.
+
+## Why this repository exists
+
+Right now, Blue Fission frontend behavior is split across several places:
+
+- reusable utility code in existing internal frontend modules
+- app-level modules in `framework/resource/src/js/modules/app`
+- dashboard behavior in `framework/resource/src/js/modules/dashboard-ui`
+- project-specific copies and forks
+
+Those codebases share the same ideas:
+
+- CRUD API wrappers
+- response parsing
+- reactive record state
+- dashboard module bootstrapping
+- jQuery event wiring
+- screen swapping and notices
+
+They just do it inconsistently. Reactor is the consolidation layer for those ideas.
+
+## Current documentation quality
+
+At the moment, Reactor is reasonably documented for architecture and intent, but still early in operational guidance.
+
+It already has:
+
+- a library-level overview in this file
+- scope and acceptance criteria in `SPEC.md`
+- a system view in `ARCHITECTURE.md`
+- a roadmap in `ROADMAP.md`
+- migration notes for legacy module composition
+
+It was missing:
+
+- a better explanation of how the pieces fit together
+- a clear quick-start path
+- a public API reference
+- a stronger voice about what the library is trying to become
+
+This README and the supporting docs are meant to close that gap.
+
+## The Reactor mental model
+
+Reactor is organized around three layers:
+
+1. Core primitives
+   Response normalization, transport, state, and module lifecycle.
+2. Browser binding
+   Small DOM helpers for simple reactive behavior without introducing a full renderer.
+3. Adapters
+   Compatibility layers for Blue Fission conventions, jQuery-heavy screens, and extracted legacy patterns.
+
+That separation matters. It lets us keep legacy integration support without hard-coding legacy assumptions into the permanent center of the library.
+
+## Package surface
+
+The current public surface is:
+
+- `src/core/response.js`
+  `normalizeResponse`, `BlueFissionResponse`
+- `src/core/transport.js`
+  `createTransport`, `createResource`, `createResourceFromDefinition`, `createResourceRegistry`
+- `src/core/signals.js`
+  `Signal`, `createSignal`, `computed`
+- `src/core/module.js`
+  `createModule`, `createModuleManager`
+- `src/core/behavior.js`
+  `Events`, `States`, `BehavioralObject`, `createBehavioralObject`
+- `src/dom/binder.js`
+  `select`, `selectAll`, `bindText`, `bindValue`, `interpolate`, `on`
+- `src/dom/framework.js`
+  legacy-compatible `El`, `get`, `set`, `assign`, `create`
+- `src/dom/template.js`
+  lightweight selector-based template rendering
+- `src/net/http.js`
+  `HttpRequest`, `HttpResponse`, `createHttpClient`
+- `src/services/service.js`
+  `createGateway`, `createServiceClient`
+- `src/data/record-set.js`
+  `RecordSet`, `createRecordSet`
+- `src/ui/panels.js`
+  `createPanelRegistry`
+- `src/ui/portlet.js`
+  `createPortletController`
+- `src/html/helpers.js`
+  `escapeHtml`, `formatContent`, `renderTable`, `renderFormField`
+- `src/adapters/jquery.js`
+  `createJQueryBridge`, `createJQueryNotifier`
+- `src/adapters/bluefission.js`
+  `createBlueFissionApi`, `createBlueFissionApp`
+- `src/adapters/opus-crud.js`
+  `createRecordModel`, `createCrudPanelModule`
+- `src/browser/activity.js`
+  `createActivityTracker`
+- `src/browser/socket.js`
+  `createSocketClient`
+
+## Quick start
+
+NPM is the preferred consumption path:
 
 ```bash
 npm install @bluefission/reactor
 ```
 
-Direct ESM inclusion is also possible in internal projects:
-
-```html
-<script type="module">
-  import { createBlueFissionApp } from "./src/index.js";
-
-  const app = createBlueFissionApp({
-    apiBaseUrl: "/api"
-  });
-
-  window.app = app;
-</script>
-```
-
-## Example
+Then build an app with explicit resources and state:
 
 ```js
 import {
@@ -59,46 +147,142 @@ const app = createBlueFissionApp({
   apiBaseUrl: "/api",
   resources: {
     user: "users",
-    addon: "admin/addons"
+    report: "reports"
   }
 });
 
-const name = createSignal("Hello");
+const message = createSignal("Loading...");
 
-bindText("[data-role='message']", name);
-bindValue("[name='name']", name);
+bindText("[data-role='message']", message);
+bindValue("[name='message']", message);
 
 app.resources.user.read(1).then((response) => {
-  name.value = response.data.name;
+  message.value = response.data.realname;
 });
 ```
 
-## Extracted Opus flow
+For direct browser usage inside internal repos, ESM imports also work:
 
-The repo now includes the first concrete migration target from the old Opus modules: an Opus-style CRUD panel adapter. It captures the repeated pattern used by modules like content, entries, and students:
+```html
+<script type="module">
+  import { createBlueFissionApp } from "./src/index.js";
 
-- list screen and edit screen swapping
-- add, show, edit, save, and delete actions
-- record state with reactive fields
-- optional jQuery/DataTables integration through a bridge
+  const app = createBlueFissionApp({
+    apiBaseUrl: "/api"
+  });
 
-See:
+  window.app = app;
+</script>
+```
+
+## Extracted CRUD Pattern
+
+One concrete compatibility adapter in Reactor is a repeated CRUD admin panel flow.
+
+That adapter captures the recurring shape used by many internal screens:
+
+- a reactive record model
+- listing and edit screens
+- read, save, and delete actions
+- jQuery event handling through a bridge
+- optional DataTables reload behavior
+- shared success and error notices
+
+Relevant files:
 
 - `src/adapters/opus-crud.js`
-- `examples/opus-content-module.js`
+- `examples/crud-panel-module.js`
 - `docs/opus-migration.md`
 
-## Why this exists
+## General Module Composition
 
-The current frontend behavior is split across:
+Reactor supports a general module composition pattern through:
 
-- Opus modules in `framework/resource/src/js/modules/scripts`
-- app modules in `framework/resource/src/js/modules/app`
-- dashboard UI code in `framework/resource/src/js/modules/dashboard-ui`
-- project-local implementations such as `hoom-addon/resource/src`
+- action-aware resource definitions on `createBlueFissionApi` and `createBlueFissionApp`
+- legacy-style `app.get`, `app.set`, `app.assign`, and `app.computed` helpers
+- `RecordSet` for list-oriented state
+- `createPanelRegistry` for panel bootstrapping
+- `createPortletController` for portlet collapse and removal behavior
+- `Template` for selector-addressed render-and-swap flows
 
-Those areas share the same ideas but duplicate them inconsistently. This repository is the consolidation point.
+Relevant files:
 
-## Status
+- `examples/resource-workspace.js`
+- `docs/module-composition.md`
+- `docs/develation-alignment.md`
 
-The repository now contains the initial package contract and compatibility-oriented primitives. Widget libraries, dashboard shells, code generation helpers, and richer Opus adapters should be layered on top of this foundation in later iterations.
+## Legacy script coverage
+
+I also checked older shared script patterns and pulled reusable concepts into Reactor:
+
+- `framework.js`
+  now represented by `src/dom/framework.js`
+- `template.js`
+  now represented by `src/dom/template.js`
+- `activity.js`
+  now represented by `src/browser/activity.js`
+- `websocket.js`
+  now represented by `src/browser/socket.js`
+
+These are compatibility-minded rehomes, not fragile line-for-line copies.
+
+## Design stance
+
+Reactor is deliberately pragmatic:
+
+- jQuery support stays available because current products need it
+- jQuery is treated as an adapter, not the permanent core
+- npm installation is preferred, but direct inclusion remains possible
+- backend compatibility matters more than frontend fashion
+- migration is favored over rewrite theater
+
+This is an internal platform library. Its value is not novelty. Its value is reducing drift across projects while giving us a cleaner path forward.
+
+## Document map
+
+- `README.md`
+  project overview and usage entry point
+- `docs/getting-started.md`
+  first practical steps and composition patterns
+- `docs/api-reference.md`
+  current public API summary
+- `docs/module-composition.md`
+  general composition guidance for resources, records, panels, and optional compatibility adapters
+- `docs/develation-alignment.md`
+  how Reactor aligns with DevElation service, net, html, and object patterns
+- `docs/legacy-script-coverage.md`
+  mapping from the original `scripts` utilities to Reactor equivalents
+- `docs/dashboard-ui-interop.md`
+  status of legacy `dashboard-ui` features and how they relate to jQuery
+- `docs/opus-migration.md`
+  compatibility notes for older CRUD-oriented module patterns
+- `SPEC.md`
+  product scope, users, and acceptance criteria
+- `ARCHITECTURE.md`
+  structural and layering decisions
+- `ROADMAP.md`
+  near-term and long-term direction
+
+## Current status
+
+Reactor is in its foundation phase.
+
+It now has:
+
+- a coherent package structure
+- a documented architectural direction
+- a Blue Fission-oriented transport and app bootstrap layer
+- a DevElation-aligned request, response, and gateway layer
+- evented object and record-set primitives for legacy dashboard migrations
+- a lightweight signal and DOM binding model
+- an extracted CRUD panel adapter
+- baseline automated tests for response normalization, service gateways, evented objects, and Blue Fission API bootstrap
+
+It still needs:
+
+- broader automated coverage for DOM helpers, templates, record sets, and UI adapters
+- a dashboard shell adapter
+- richer HTML decorators and form adapters
+- validation against a real framework module migration
+
+Those items are intentionally tracked as follow-up work rather than hidden as vague future intent.
