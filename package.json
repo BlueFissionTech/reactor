@@ -10,6 +10,7 @@
     "./response": "./src/core/response.js",
     "./transport": "./src/core/transport.js",
     "./module": "./src/core/module.js",
+    "./binding-contract": "./src/core/binding-contract.js",
     "./signals": "./src/core/signals.js",
     "./dom": "./src/dom/binder.js",
     "./jquery": "./src/adapters/jquery.js",

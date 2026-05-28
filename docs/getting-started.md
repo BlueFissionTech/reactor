@@ -88,7 +88,7 @@ A common resource workspace usually needs:
 - one list-level record set
 - one panel map
 
-Reactor supports that shape without assuming a downstream file layout:
+Reactor supports that shape without assuming a host application file layout:
 
 ```js
 import {

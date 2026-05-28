@@ -26,6 +26,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - The library includes a response normalizer that understands Blue Fission payload shapes such as `data`, `status`, `list`, `id`, `query`, and `children`.
 - The library includes a transport layer with fetch-based requests and CRUD resource helpers.
 - The library includes a lightweight reactive primitive for state and DOM binding.
+- The library includes a reusable binding contract descriptor for frontend state, event, selector, and lifecycle handoffs.
 - The library includes a module lifecycle abstraction suitable for dashboard and admin modules.
 - The library includes a jQuery interoperability layer so existing apps can adopt it immediately.
 - The design explicitly treats jQuery as a compatibility layer, not the long-term core.
@@ -49,6 +50,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - Response normalization
 - Transport and CRUD resources
 - Module lifecycle
+- Binding contract descriptors
 - Signals and computed state
 - DOM binding
 - jQuery bridge

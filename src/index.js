@@ -23,6 +23,11 @@ export {
 } from "./core/module.js";
 
 export {
+  createBindingContract,
+  createBindingManifest
+} from "./core/binding-contract.js";
+
+export {
   Events,
   States,
   BehavioralObject,

@@ -1,10 +1,10 @@
 # Module Composition
 
-This note describes how to compose Reactor primitives for internal modules without assuming a specific downstream product layout.
+This note describes how to compose Reactor primitives for internal modules without assuming a specific host product layout.
 
 ## Intent
 
-Reactor should provide reusable frontend contracts, not prescribe where an application stores files or how a downstream platform names screens. Use these pieces as opt-in building blocks:
+Reactor should provide reusable frontend contracts, not prescribe where an application stores files or how a host platform names screens. Use these pieces as opt-in building blocks:
 
 - `createBlueFissionApp(...)` for shared API, module, panel, and binding access
 - action-aware resources for endpoint-specific commands
@@ -16,7 +16,7 @@ Reactor should provide reusable frontend contracts, not prescribe where an appli
 
 ## Resource Setup
 
-Define resources by capability rather than by downstream file or module names:
+Define resources by capability rather than by host file or module names:
 
 ```js
 const app = createBlueFissionApp({
@@ -122,4 +122,4 @@ Downstream applications own:
 - domain models
 - product-specific workflow decisions
 
-Keeping that boundary clear is what lets Reactor remain useful across Blue Fission projects without becoming a copy of any one downstream app.
+Keeping that boundary clear is what lets Reactor remain useful across Blue Fission projects without becoming a copy of any one consuming app.

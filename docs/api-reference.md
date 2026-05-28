@@ -134,6 +134,40 @@ Creates a module with lifecycle hooks:
 
 Registry for named modules.
 
+## Binding contracts
+
+### `createBindingContract(definition?)`
+
+Creates a serializable frontend binding contract descriptor with:
+
+- `inputs`
+- `outputs`
+- `events`
+- `states`
+- `lifecycle`
+- `selectors`
+- `ownership`
+
+Lookup helpers include:
+
+- `input(name)`
+- `output(name)`
+- `event(name)`
+- `state(name)`
+- `lifecycleStep(name)`
+- `describe()`
+
+### `createBindingManifest(contracts?)`
+
+Creates a small registry for multiple binding contracts.
+
+Methods:
+
+- `list()`
+- `get(name)`
+- `names()`
+- `describe()`
+
 ## DOM binding
 
 ### `select(selector, root?)`

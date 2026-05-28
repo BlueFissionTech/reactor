@@ -93,6 +93,10 @@ This lets Reactor models behave like data objects and event emitters at the same
 
 Plugins can extend the module context without forcing a framework choice.
 
+### Binding contract
+
+`createBindingContract` describes the expected handoff between host application state and Reactor bindings. It keeps inputs, outputs, events, states, selectors, lifecycle steps, and ownership boundaries inspectable without forcing a renderer or product-specific adapter.
+
 ## Interop direction
 
 Legacy dashboard code currently mixes:
