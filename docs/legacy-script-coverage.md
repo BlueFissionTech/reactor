@@ -1,6 +1,6 @@
 # Legacy Script Coverage
 
-This note maps older shared browser utilities into Reactor without prescribing a downstream project layout.
+This note maps older shared browser utilities into Reactor without prescribing a host project layout.
 
 ## Source Shape Reviewed
 
@@ -169,7 +169,7 @@ This pattern usually looks like:
 - `Template.render()` is called
 - `Template.swap(...)` replaces the existing preview section with rendered detail markup
 
-That is the behavior downstream consumers need to understand.
+That is the behavior consuming applications need to understand.
 
 ## Important boundary
 

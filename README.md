@@ -94,6 +94,8 @@ The current public surface is:
   `Signal`, `createSignal`, `computed`
 - `src/core/module.js`
   `createModule`, `createModuleManager`
+- `src/core/binding-contract.js`
+  `createBindingContract`, `createBindingManifest`
 - `src/core/behavior.js`
   `Events`, `States`, `BehavioralObject`, `createBehavioralObject`
 - `src/dom/binder.js`
@@ -248,6 +250,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   current public API summary
 - `docs/module-composition.md`
   general composition guidance for resources, records, panels, and optional compatibility adapters
+- `docs/binding-contracts.md`
+  reusable frontend binding contract shape and ownership boundaries
 - `docs/develation-alignment.md`
   how Reactor aligns with DevElation service, net, html, and object patterns
 - `docs/legacy-script-coverage.md`
