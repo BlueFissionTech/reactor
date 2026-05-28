@@ -352,6 +352,47 @@ Integration callbacks include `setActiveMenu`, `setRoute`, `notice`, `dialog`, a
 
 Normalizes hash or path-style routes into shell route keys.
 
+### `createFormController(options?)`
+
+Async form helper with signal-backed state:
+
+- `status`
+- `submitting`
+- `errors`
+- `fieldErrors`
+- `response`
+- `submit(input?, context?)`
+- `reset()`
+- `serialize(input?)`
+
+Submissions can use:
+
+- `submit(payload, context)`
+- `resource` with an action such as `save` or `create`
+- `transport` plus `endpoint` and `method`
+
+Hooks include:
+
+- `validate(payload, context)`
+- `onBeforeSubmit(event)`
+- `onInvalid(event)`
+- `onSuccess(event)`
+- `onError(event)`
+- `onSettled(event)`
+- `onStatus(event)`
+
+### `serializeFormInput(input?)`
+
+Converts `FormData`, `URLSearchParams`, HTML forms, signal-backed objects, or plain objects into a payload object.
+
+### `normalizeFormErrors(errors?)`
+
+Returns both flat `messages` and keyed `fields`.
+
+### `FormStatus`
+
+Status constants: `idle`, `submitting`, `success`, `error`, and `invalid`.
+
 ### `createPortletController(options?)`
 
 Portlet helper inspired by `portlet-ui.js`.
