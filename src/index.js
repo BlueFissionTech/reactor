@@ -81,6 +81,11 @@ export {
 } from "./ui/panels.js";
 
 export {
+  createDashboardShell,
+  normalizeRoute
+} from "./ui/dashboard-shell.js";
+
+export {
   escapeHtml,
   formatContent,
   renderTable,
