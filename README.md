@@ -112,6 +112,8 @@ The current public surface is:
   `RecordSet`, `createRecordSet`
 - `src/ui/panels.js`
   `createPanelRegistry`
+- `src/ui/dashboard-shell.js`
+  `createDashboardShell`, `normalizeRoute`
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`

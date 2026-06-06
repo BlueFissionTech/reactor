@@ -324,6 +324,34 @@ Panel registry with:
 - `list()`
 - `activate(name, context?)`
 
+### `createDashboardShell(options?)`
+
+Reusable dashboard shell adapter with signal-backed state:
+
+- `currentPanel`
+- `activeMenu`
+- `route`
+- `noticeState`
+- `dialogState`
+
+Methods:
+
+- `registerPanel(name, panel)`
+- `activatePanel(name, context?)`
+- `home(context?)`
+- `navigate(target, context?)`
+- `syncFromLocation(location?, context?)`
+- `setActiveMenu(name, context?)`
+- `setRoute(target, context?)`
+- `notice(message, type?, meta?)`
+- `dialog(name, payload?)`
+
+Integration callbacks include `setActiveMenu`, `setRoute`, `notice`, `dialog`, and `resolvePanel`.
+
+### `normalizeRoute(target?)`
+
+Normalizes hash or path-style routes into shell route keys.
+
 ### `createPortletController(options?)`
 
 Portlet helper inspired by `portlet-ui.js`.
