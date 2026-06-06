@@ -116,6 +116,8 @@ The current public surface is:
   `createDashboardShell`, `normalizeRoute`
 - `src/ui/forms.js`
   `FormStatus`, `createFormController`, `serializeFormInput`, `normalizeFormErrors`
+- `src/ui/surface-contract.js`
+  `SurfaceFamilies`, `SurfaceUpdateSources`, `createSurfaceContract`, `createSurfaceManifest`, `createSurfacePulse`
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`
@@ -256,6 +258,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   general composition guidance for resources, records, panels, and optional compatibility adapters
 - `docs/binding-contracts.md`
   reusable frontend binding contract shape and ownership boundaries
+- `docs/surface-contracts.md`
+  reusable rich-surface component, state, event, and pulse contract shape
 - `docs/develation-alignment.md`
   how Reactor aligns with DevElation service, net, html, and object patterns
 - `docs/legacy-script-coverage.md`

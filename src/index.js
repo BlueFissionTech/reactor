@@ -93,6 +93,14 @@ export {
 } from "./ui/forms.js";
 
 export {
+  SurfaceFamilies,
+  SurfaceUpdateSources,
+  createSurfaceContract,
+  createSurfaceManifest,
+  createSurfacePulse
+} from "./ui/surface-contract.js";
+
+export {
   escapeHtml,
   formatContent,
   renderTable,
