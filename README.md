@@ -114,6 +114,8 @@ The current public surface is:
   `createPanelRegistry`
 - `src/ui/dashboard-shell.js`
   `createDashboardShell`, `normalizeRoute`
+- `src/ui/forms.js`
+  `FormStatus`, `createFormController`, `serializeFormInput`, `normalizeFormErrors`
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`

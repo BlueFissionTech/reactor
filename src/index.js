@@ -86,6 +86,13 @@ export {
 } from "./ui/dashboard-shell.js";
 
 export {
+  FormStatus,
+  createFormController,
+  normalizeFormErrors,
+  serializeFormInput
+} from "./ui/forms.js";
+
+export {
   escapeHtml,
   formatContent,
   renderTable,
