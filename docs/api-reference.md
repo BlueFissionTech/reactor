@@ -393,6 +393,51 @@ Returns both flat `messages` and keyed `fields`.
 
 Status constants: `idle`, `submitting`, `success`, `error`, and `invalid`.
 
+### `createSurfaceContract(definition?)`
+
+Creates a serializable rich-surface contract descriptor with:
+
+- `components`
+- `states`
+- `events`
+- `bindings`
+- `updateRules`
+- `pulses`
+- `ownership`
+
+Lookup helpers include:
+
+- `component(name)`
+- `state(name)`
+- `event(name)`
+- `binding(name)`
+- `updateRule(name)`
+- `pulse(name)`
+- `describe()`
+
+### `createSurfaceManifest(contracts?)`
+
+Creates a registry for surface contracts.
+
+Methods:
+
+- `list()`
+- `get(name)`
+- `families()`
+- `describe()`
+
+### `createSurfacePulse(definition?)`
+
+Creates a small update descriptor for a surface action. Scripted pulses default to deterministic updates; reactive pulses default to non-deterministic updates.
+
+### `SurfaceFamilies`
+
+Family constants for `media`, `dialogue`, `scene`, `overlay`, `panel`, `notification`, `choice`, and `command`.
+
+### `SurfaceUpdateSources`
+
+Update source constants for `scripted`, `reactive`, and `system`.
+
 ### `createPortletController(options?)`
 
 Portlet helper inspired by `portlet-ui.js`.

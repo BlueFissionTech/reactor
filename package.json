@@ -11,6 +11,7 @@
     "./transport": "./src/core/transport.js",
     "./module": "./src/core/module.js",
     "./binding-contract": "./src/core/binding-contract.js",
+    "./surface-contract": "./src/ui/surface-contract.js",
     "./signals": "./src/core/signals.js",
     "./dom": "./src/dom/binder.js",
     "./dashboard-shell": "./src/ui/dashboard-shell.js",
