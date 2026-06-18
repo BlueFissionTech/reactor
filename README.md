@@ -268,6 +268,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   status of legacy `dashboard-ui` features and how they relate to jQuery
 - `docs/opus-migration.md`
   compatibility notes for older CRUD-oriented module patterns
+- `docs/crud-validation.md`
+  validation notes for the extracted CRUD adapter and its remaining general gaps
 - `SPEC.md`
   product scope, users, and acceptance criteria
 - `ARCHITECTURE.md`
@@ -288,13 +290,13 @@ It now has:
 - evented object and record-set primitives for legacy dashboard migrations
 - a lightweight signal and DOM binding model
 - an extracted CRUD panel adapter
+- dashboard shell, form helper, surface contract, and CRUD adapter coverage
 - baseline automated tests for response normalization, service gateways, evented objects, and Blue Fission API bootstrap
 
 It still needs:
 
 - broader automated coverage for DOM helpers, templates, record sets, and UI adapters
-- a dashboard shell adapter
-- richer HTML decorators and form adapters
-- validation against a real framework module migration
+- reusable table, modal, and notification adapter slices
+- method-level dashboard interop mapping for the remaining legacy utility surface
 
 Those items are intentionally tracked as follow-up work rather than hidden as vague future intent.
