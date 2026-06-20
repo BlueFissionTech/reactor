@@ -4,15 +4,14 @@
 
 - Stabilize the package API and usage examples.
 - Expand tests across CRUD resources, signals, DOM helpers, templates, record sets, and UI adapters.
-- Add a dashboard shell adapter for reusable navigation patterns.
-- Add richer form and HTML helpers for Blue Fission validation and submission flows.
-- Validate the CRUD adapter against one real module migration without baking downstream layout into Reactor.
-- Validate general module composition against a real internal migration while keeping examples domain-neutral.
+- Harden the dashboard shell, form helpers, rich surface contracts, and CRUD validation slices after review.
+- Add table, modal, and notification adapter slices surfaced by CRUD validation.
+- Validate additional module composition paths while keeping examples domain-neutral.
 
 ## Mid term
 
 - Extract reusable UI patterns from existing internal modules.
-- Provide adapters for DataTables, modal flows, and notifications.
+- Provide richer table/list, modal flow, and notification adapters.
 - Replace document-ready global bootstrapping with explicit app startup patterns.
 - Expand DevElation-aligned request and object semantics where that improves interop without coupling.
 - Publish versioned packages for internal npm consumption.

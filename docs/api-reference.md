@@ -553,6 +553,8 @@ Supports:
 - DataTable refresh hooks
 - custom lifecycle hooks
 
+See `docs/crud-validation.md` for the validated representative flow and the boundaries that remain outside this adapter.
+
 ## Browser utilities
 
 ### `createActivityTracker(options?)`
