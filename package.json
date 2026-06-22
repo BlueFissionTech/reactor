@@ -15,6 +15,7 @@
     "./signals": "./src/core/signals.js",
     "./dom": "./src/dom/binder.js",
     "./dashboard-shell": "./src/ui/dashboard-shell.js",
+    "./table-list": "./src/ui/table-list.js",
     "./forms": "./src/ui/forms.js",
     "./jquery": "./src/adapters/jquery.js",
     "./bluefission": "./src/adapters/bluefission.js",
