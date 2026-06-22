@@ -86,6 +86,13 @@ export {
 } from "./ui/dashboard-shell.js";
 
 export {
+  DialogStates,
+  createConfirmationController,
+  createModalController,
+  normalizeDialogRequest
+} from "./ui/dialogs.js";
+
+export {
   createTableListAdapter,
   normalizeTableQuery
 } from "./ui/table-list.js";

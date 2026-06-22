@@ -352,6 +352,21 @@ Integration callbacks include `setActiveMenu`, `setRoute`, `notice`, `dialog`, a
 
 Normalizes hash or path-style routes into shell route keys.
 
+### `createModalController(options?)`
+
+Creates modal open/close state with `state`, `current`, `result`, `open(request)`, and `close(result)`.
+
+### `createConfirmationController(options?)`
+
+Creates an explicit confirmation request flow with `request(input)`, `confirm(payload?)`, and `cancel(payload?)`.
+
+### `normalizeDialogRequest(input?)`
+
+Returns a stable dialog request with `name`, `title`, `message`, labels, `payload`, and `meta`.
+
+### `DialogStates`
+
+State constants: `closed`, `open`, `pending`, `confirmed`, and `cancelled`.
 ### `createTableListAdapter(options?)`
 
 Creates a signal-backed adapter for resource-backed table or list surfaces.
