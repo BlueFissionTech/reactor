@@ -393,6 +393,26 @@ Returns both flat `messages` and keyed `fields`.
 
 Status constants: `idle`, `submitting`, `success`, `error`, and `invalid`.
 
+### `createNotificationAdapter(target?, options?)`
+
+Normalizes and dispatches module notifications without coupling modules to a display provider.
+
+Helpers include:
+
+- `notify(input, type?, meta?)`
+- `success(message, meta?)`
+- `error(message, meta?)`
+- `info(message, meta?)`
+- `warning(message, meta?)`
+
+### `normalizeNotification(input?, type?, meta?)`
+
+Returns a stable notification payload with `type`, `message`, `title`, `meta`, and `context`.
+
+### `NotificationTypes`
+
+Type constants: `success`, `error`, `info`, and `warning`.
+
 ### `createSurfaceContract(definition?)`
 
 Creates a serializable rich-surface contract descriptor with:
