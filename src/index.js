@@ -86,6 +86,11 @@ export {
 } from "./ui/dashboard-shell.js";
 
 export {
+  createTableListAdapter,
+  normalizeTableQuery
+} from "./ui/table-list.js";
+
+export {
   FormStatus,
   createFormController,
   normalizeFormErrors,

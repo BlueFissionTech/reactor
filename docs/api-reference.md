@@ -352,6 +352,25 @@ Integration callbacks include `setActiveMenu`, `setRoute`, `notice`, `dialog`, a
 
 Normalizes hash or path-style routes into shell route keys.
 
+### `createTableListAdapter(options?)`
+
+Creates a signal-backed adapter for resource-backed table or list surfaces.
+
+Exposes:
+
+- `rows`
+- `query`
+- `loading`
+- `error`
+- `setRows(rows)`
+- `rowFrom(target, context?)`
+- `refresh(query?)`
+- `select(target, context?)`
+
+### `normalizeTableQuery(input?)`
+
+Returns normalized `page`, `perPage`, `search`, `sort`, and `filters` values for list refresh flows.
+
 ### `createFormController(options?)`
 
 Async form helper with signal-backed state:

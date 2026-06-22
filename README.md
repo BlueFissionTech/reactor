@@ -260,6 +260,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   reusable frontend binding contract shape and ownership boundaries
 - `docs/surface-contracts.md`
   reusable rich-surface component, state, event, and pulse contract shape
+- `docs/table-list-adapters.md`
+  table/list query, row lookup, refresh, loading, and selection contracts
 - `docs/notification-adapters.md`
   normalized notification payload and dispatch conventions
 - `docs/develation-alignment.md`
