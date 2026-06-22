@@ -98,6 +98,12 @@ export {
 } from "./ui/forms.js";
 
 export {
+  NotificationTypes,
+  createNotificationAdapter,
+  normalizeNotification
+} from "./ui/notifications.js";
+
+export {
   SurfaceFamilies,
   SurfaceUpdateSources,
   createSurfaceContract,

@@ -17,6 +17,7 @@
     "./dashboard-shell": "./src/ui/dashboard-shell.js",
     "./table-list": "./src/ui/table-list.js",
     "./forms": "./src/ui/forms.js",
+    "./notifications": "./src/ui/notifications.js",
     "./jquery": "./src/adapters/jquery.js",
     "./bluefission": "./src/adapters/bluefission.js",
     "./opus-crud": "./src/adapters/opus-crud.js"
