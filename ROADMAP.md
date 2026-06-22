@@ -7,6 +7,7 @@
 - Harden the dashboard shell, form helpers, rich surface contracts, and CRUD validation slices after review.
 - Add table, modal, and notification adapter slices surfaced by CRUD validation.
 - Validate additional module composition paths while keeping examples domain-neutral.
+- Use the dashboard utility ownership map to keep future adapter extraction small and testable.
 
 ## Mid term
 

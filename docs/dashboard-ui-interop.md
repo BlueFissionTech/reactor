@@ -98,14 +98,6 @@ If you are reading Reactor today:
 
 That distinction matters. Without it, the library can sound more complete than it is.
 
-## Next documentation step
+## Ownership Map
 
-The next useful improvement would be a method-by-method migration matrix from:
-
-- `framework/resource/src/js/modules/dashboard-ui/dashboard-ui.js`
-
-to:
-
-- existing Reactor adapters
-- planned Reactor adapters
-- behaviors that should remain application-local
+The method-level migration matrix is tracked in `docs/dashboard-utility-map.md`.
