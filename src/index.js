@@ -93,11 +93,22 @@ export {
 } from "./ui/dialogs.js";
 
 export {
+  createTableListAdapter,
+  normalizeTableQuery
+} from "./ui/table-list.js";
+
+export {
   FormStatus,
   createFormController,
   normalizeFormErrors,
   serializeFormInput
 } from "./ui/forms.js";
+
+export {
+  NotificationTypes,
+  createNotificationAdapter,
+  normalizeNotification
+} from "./ui/notifications.js";
 
 export {
   SurfaceFamilies,
