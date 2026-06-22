@@ -272,6 +272,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   mapping from the original `scripts` utilities to Reactor equivalents
 - `docs/dashboard-ui-interop.md`
   status of legacy `dashboard-ui` features and how they relate to jQuery
+- `docs/dashboard-utility-map.md`
+  method-level ownership map for legacy dashboard utility extraction
 - `docs/opus-migration.md`
   compatibility notes for older CRUD-oriented module patterns
 - `docs/crud-validation.md`
