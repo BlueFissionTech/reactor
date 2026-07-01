@@ -30,6 +30,8 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - The library includes a reusable dashboard shell adapter for panel activation, route state, menu state, notices, and dialogs.
 - The library includes async form helpers for validation, submission state, and transport-backed persistence.
 - The library includes reusable surface contract descriptors for media, dialogue, scene, overlay, panel, notification, choice, and command surfaces.
+- The library includes an HTML helper group that covers reusable formatting, element, table, form, pagination, media/file, graph, XML-like node, and rendered-output normalization needs.
+- The HTML helper group accepts rendered strings from parsing/runtime flows and structured payloads with `html`, `output`, `rendered`, `renderedOutput`, `rendered_output`, `markdown`, `text`, `records`, `rows`, `fields`, `items`, `nodes`, `fragments`, `blocks`, or `children`.
 - The library includes a module lifecycle abstraction suitable for dashboard and admin modules.
 - The library includes a jQuery interoperability layer so existing apps can adopt it immediately.
 - The design explicitly treats jQuery as a compatibility layer, not the long-term core.
@@ -59,6 +61,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - Surface contract descriptors
 - Signals and computed state
 - DOM binding
+- HTML helper rendering and output normalization
 - jQuery bridge
 - Blue Fission app bootstrap
 - CRUD panel adapter for repeated admin module flows

@@ -82,6 +82,17 @@ This lets Reactor models behave like data objects and event emitters at the same
 
 `HttpRequest`, `HttpResponse`, `createGateway`, and `createServiceClient` provide a processor-oriented request pipeline closer to DevElation service and net classes. This layer is intentionally generic so Reactor can work with Blue Fission conventions without being locked to them.
 
+### HTML helper contract
+
+`src/html/helpers.js` is a lightweight rendering utility group, not a full renderer. It covers the reusable HTML helper families from the upstream PHP side:
+
+- formatting, href/base hrefs, images, files, pagination, results, lists, and bar graphs
+- form wrappers, fields, dropdowns, date parts, and validation metadata
+- tables and XML-like node rebuilding
+- rendered-output normalization for parser/runtime strings and structured output envelopes
+
+Rendered strings pass through `renderHtml(...)` because parser and runtime readers, including Vibrato `Reader::output()`, already return final output. Text-bearing structured fields such as `{ text }`, table cells, form values, XML content, and element children are escaped unless the caller explicitly provides an `{ html }` payload or trusted content option.
+
 ### Module contract
 
 `createModule` gives each app unit explicit lifecycle hooks:

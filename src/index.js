@@ -120,9 +120,34 @@ export {
 
 export {
   escapeHtml,
+  renderAttributes,
+  renderElement,
+  renderHtml,
+  normalizeRenderedOutput,
   formatContent,
+  normalizeHref,
+  renderImage,
+  renderFileLink,
+  renderPagination,
+  renderResults,
+  renderBaseHref,
+  renderBarGraph,
+  nl2li,
+  br2nl,
+  darkenHexColor,
+  darkerColor,
+  renderList,
   renderTable,
-  renderFormField
+  renderDropdown,
+  renderFormField,
+  renderDateField,
+  splitDate,
+  joinDateParts,
+  renderFormOpen,
+  renderFormClose,
+  renderForm,
+  renderFormValidation,
+  renderXml
 } from "./html/helpers.js";
 
 export {

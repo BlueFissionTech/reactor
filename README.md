@@ -121,7 +121,7 @@ The current public surface is:
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`
-  `escapeHtml`, `formatContent`, `renderTable`, `renderFormField`
+  `escapeHtml`, `renderHtml`, `renderElement`, `renderTable`, `renderForm`, `renderFormField`, `renderXml`, and small HTML utility helpers
 - `src/adapters/jquery.js`
   `createJQueryBridge`, `createJQueryNotifier`
 - `src/adapters/bluefission.js`
@@ -217,6 +217,26 @@ Relevant files:
 
 - `examples/resource-workspace.js`
 - `docs/module-composition.md`
+- `docs/develation-alignment.md`
+
+## HTML Helper Compatibility
+
+The HTML helper group is intentionally small, but it now represents the reusable concepts from the upstream HTML utilities:
+
+- text formatting, href/base href normalization, images, files, pagination, result tables, lists, and bar graphs
+- form open/close, fields, dropdowns, date splitting/joining, and validation metadata
+- table rendering from row data
+- template/runtime output normalization through `renderHtml(...)`
+- XML-like node rebuilding through `renderXml(...)`
+
+`renderHtml(...)` accepts rendered strings as-is so output from parsing and runtime readers, including Vibrato `Reader::output()`, can be passed directly. Structured payloads can also use `html`, `output`, `rendered`, `renderedOutput`, `rendered_output`, `markdown`, `text`, `records`, `rows`, `fields`, `items`, `nodes`, `fragments`, `blocks`, or `children`.
+
+For text safety, use `{ text: value }`, table rows, and form field values; those are escaped by default. Use `{ html: value }` only when the caller owns the trust boundary.
+
+Relevant files:
+
+- `examples/html-output-contracts.js`
+- `docs/api-reference.md`
 - `docs/develation-alignment.md`
 
 ## Legacy script coverage
