@@ -1,3 +1,5 @@
+import { isPlainObject } from "../core/primitives.js";
+
 export const NotificationTypes = Object.freeze({
   SUCCESS: "success",
   ERROR: "error",
@@ -8,8 +10,8 @@ export const NotificationTypes = Object.freeze({
 const knownTypes = new Set(Object.values(NotificationTypes));
 
 export function normalizeNotification(input = "", type = NotificationTypes.INFO, meta = {}) {
-  const source = isObject(input) ? input : { message: input };
-  const options = isObject(type) ? type : { type, meta };
+  const source = isPlainObject(input) ? input : { message: input };
+  const options = isPlainObject(type) ? type : { type, meta };
   const normalizedType = normalizeType(source.type || options.type);
   const message = source.message ?? source.text ?? "";
   const title = source.title ?? "";
@@ -19,8 +21,8 @@ export function normalizeNotification(input = "", type = NotificationTypes.INFO,
     message: String(message),
     title: title ? String(title) : "",
     meta: {
-      ...(isObject(options.meta) ? options.meta : {}),
-      ...(isObject(source.meta) ? source.meta : {})
+      ...(isPlainObject(options.meta) ? options.meta : {}),
+      ...(isPlainObject(source.meta) ? source.meta : {})
     },
     context: source.context ?? options.context ?? null
   };
@@ -79,8 +81,4 @@ function dispatchFallback(fallback, notification) {
   if (typeof fallback?.[method] === "function") {
     fallback[method](notification.message, notification);
   }
-}
-
-function isObject(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

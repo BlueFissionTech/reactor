@@ -1,3 +1,4 @@
+import { isNil, isPlainObject, toInteger, toList } from "../core/primitives.js";
 import { createSignal } from "../core/signals.js";
 
 export function normalizeTableQuery(input = {}) {
@@ -11,13 +12,13 @@ export function normalizeTableQuery(input = {}) {
 }
 
 export function createTableListAdapter(options = {}) {
-  const rows = createSignal(Array.isArray(options.rows) ? [...options.rows] : []);
+  const rows = createSignal(normalizeRows(options.rows));
   const query = createSignal(normalizeTableQuery(options.query || {}));
   const loading = createSignal(false);
   const error = createSignal(null);
 
   function setRows(nextRows = []) {
-    rows.value = Array.isArray(nextRows) ? [...nextRows] : [];
+    rows.value = normalizeRows(nextRows);
     return rows.value;
   }
 
@@ -105,7 +106,7 @@ function normalizeSortEntry(sort) {
     };
   }
 
-  if (!isObject(sort) || !sort.field) {
+  if (!isPlainObject(sort) || !sort.field) {
     return null;
   }
 
@@ -123,7 +124,7 @@ function normalizeFilters(filters) {
   const output = {};
 
   for (const [key, value] of Object.entries(filters)) {
-    if (value == null || value === "") {
+    if (isNil(value) || value === "") {
       continue;
     }
 
@@ -133,8 +134,12 @@ function normalizeFilters(filters) {
   return output;
 }
 
+function normalizeRows(value) {
+  return Array.isArray(value) ? toList(value) : [];
+}
+
 function normalizePositiveInteger(value, fallback) {
-  const parsed = Number.parseInt(value, 10);
+  const parsed = toInteger(value, fallback);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
@@ -142,8 +147,4 @@ function callHook(hook, payload) {
   if (typeof hook === "function") {
     hook(payload);
   }
-}
-
-function isObject(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

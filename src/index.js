@@ -1,4 +1,32 @@
 export {
+  Arr,
+  Num,
+  Obj,
+  Primitive,
+  Str,
+  Value,
+  clampNumber,
+  dasherize,
+  firstItem,
+  getPath,
+  hasValue,
+  isEmpty,
+  isNil,
+  isPlainObject,
+  isScalar,
+  joinClassNames,
+  lastItem,
+  objectEntries,
+  omit,
+  pick,
+  setPath,
+  toInteger,
+  toList,
+  toNumber,
+  toText
+} from "./core/primitives.js";
+
+export {
   Signal,
   createSignal,
   computed,

@@ -1,4 +1,5 @@
 import { createSignal } from "../core/signals.js";
+import { isPlainObject } from "../core/primitives.js";
 
 export const DialogStates = Object.freeze({
   CLOSED: "closed",
@@ -17,8 +18,8 @@ export function normalizeDialogRequest(input = {}) {
     message: source.message || "",
     confirmLabel: source.confirmLabel || "Confirm",
     cancelLabel: source.cancelLabel || "Cancel",
-    payload: isObject(source.payload) ? { ...source.payload } : {},
-    meta: isObject(source.meta) ? { ...source.meta } : {}
+    payload: isPlainObject(source.payload) ? { ...source.payload } : {},
+    meta: isPlainObject(source.meta) ? { ...source.meta } : {}
   };
 }
 
@@ -39,7 +40,7 @@ export function createModalController(options = {}) {
   function close(nextResult = {}) {
     const normalized = {
       state: nextResult.state || DialogStates.CLOSED,
-      payload: isObject(nextResult.payload) ? { ...nextResult.payload } : {},
+      payload: isPlainObject(nextResult.payload) ? { ...nextResult.payload } : {},
       request: current.value
     };
 
@@ -96,7 +97,7 @@ export function createConfirmationController(options = {}) {
     const output = {
       state,
       confirmed,
-      payload: isObject(payload) ? { ...payload } : {},
+      payload: isPlainObject(payload) ? { ...payload } : {},
       request: pending.request
     };
     const resolve = pending.resolve;
@@ -123,8 +124,4 @@ function callHook(hook, payload) {
   if (typeof hook === "function") {
     hook(payload);
   }
-}
-
-function isObject(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

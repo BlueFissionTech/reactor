@@ -74,7 +74,7 @@ This README and the supporting docs are meant to close that gap.
 Reactor is organized around three layers:
 
 1. Core primitives
-   Response normalization, transport, state, and module lifecycle.
+   Primitive helpers, response normalization, transport, state, and module lifecycle.
 2. Browser binding
    Small DOM helpers for simple reactive behavior without introducing a full renderer.
 3. Adapters
@@ -88,6 +88,8 @@ The current public surface is:
 
 - `src/core/response.js`
   `normalizeResponse`, `BlueFissionResponse`
+- `src/core/primitives.js`
+  `Value`, `Arr`, `Obj`, `Str`, `Num`, `Primitive`, `toList`, `getPath`, `setPath`, `joinClassNames`, `toNumber`, and related value helpers
 - `src/core/transport.js`
   `createTransport`, `createResource`, `createResourceFromDefinition`, `createResourceRegistry`
 - `src/core/signals.js`
@@ -215,10 +217,29 @@ Reactor supports a general module composition pattern through:
 
 Relevant files:
 
+- `examples/primitives.js`
 - `examples/resource-workspace.js`
+- `docs/primitives.md`
 - `docs/module-composition.md`
 - `docs/develation-alignment.md`
 - `docs/develation-integration.md`
+
+## Primitive Helpers
+
+Reactor exposes first-class primitive helpers for JavaScript-side value, list, object, string, and number normalization:
+
+```js
+import { Obj, Arr, Num, Str } from "@bluefission/reactor";
+
+const query = {
+  page: Num.toInteger(input.page, 1, { min: 1 }),
+  tags: Arr.toList(input.tags, { split: true }),
+  owner: Obj.getPath(input, "record.owner.name", "Unknown"),
+  className: Str.joinClassNames("resource-row", input.active && "is-active")
+};
+```
+
+These helpers are aligned with DevElation's upstream primitive vocabulary without becoming a browser-side clone of the PHP classes. The goal is consistent input normalization and mutation-free object access across Reactor modules.
 
 ## HTML Helper Compatibility
 
@@ -292,6 +313,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   current public API summary
 - `docs/module-composition.md`
   general composition guidance for resources, records, panels, and optional compatibility adapters
+- `docs/primitives.md`
+  first-class value, list, object, string, and number helper contracts
 - `docs/binding-contracts.md`
   reusable frontend binding contract shape and ownership boundaries
 - `docs/surface-contracts.md`
@@ -330,6 +353,7 @@ Reactor is in its foundation phase.
 It now has:
 
 - a coherent package structure
+- first-class primitive helper exports for consistent normalization
 - a documented architectural direction
 - a Blue Fission-oriented transport and app bootstrap layer
 - a DevElation-aligned request, response, and gateway layer

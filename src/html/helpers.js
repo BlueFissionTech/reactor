@@ -1,3 +1,11 @@
+import {
+  dasherize,
+  isPlainObject,
+  isScalar,
+  joinClassNames,
+  toList
+} from "../core/primitives.js";
+
 const IMAGE_EXTENSIONS = /\.(gif|jpe?g|tiff?|png|bmp|webp|svg)$/i;
 const FILE_EXTENSIONS = /\.(pdf|docx?|zip|mp3|mpe?g|mov|rar|txt|csv|xlsx?)$/i;
 const VOID_TAGS = new Set([
@@ -925,18 +933,6 @@ function inferColumns(records) {
   return Array.isArray(first) ? first.map((_, index) => index) : Object.keys(first);
 }
 
-function toList(value) {
-  if (value == null) {
-    return [];
-  }
-
-  if (Array.isArray(value)) {
-    return value;
-  }
-
-  return [value];
-}
-
 function basename(path) {
   return String(path ?? "").split(/[\\/]/).pop();
 }
@@ -965,25 +961,4 @@ function linkify(content) {
   return content
     .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
     .replace(/([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})/g, '<a href="mailto:$1">$1</a>');
-}
-
-function dasherize(value) {
-  return String(value).replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`);
-}
-
-function joinClassNames(...classes) {
-  return classes
-    .flatMap((className) => Array.isArray(className) ? className : String(className ?? "").split(/\s+/))
-    .map((className) => className.trim())
-    .filter(Boolean)
-    .filter((className, index, list) => list.indexOf(className) === index)
-    .join(" ");
-}
-
-function isScalar(value) {
-  return ["string", "number", "boolean", "bigint"].includes(typeof value);
-}
-
-function isPlainObject(value) {
-  return value != null && typeof value === "object" && !Array.isArray(value);
 }

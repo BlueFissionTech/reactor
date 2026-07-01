@@ -7,6 +7,7 @@
   "module": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
+    "./primitives": "./src/core/primitives.js",
     "./response": "./src/core/response.js",
     "./transport": "./src/core/transport.js",
     "./module": "./src/core/module.js",
