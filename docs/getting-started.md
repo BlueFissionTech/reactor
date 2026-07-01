@@ -27,9 +27,10 @@ Do not expect it to replace every existing dashboard behavior on day one.
 2. Register the resources your screen needs.
 3. Use signals for local state.
 4. Bind state to the DOM with `bindText` or `bindValue`.
-5. If you are migrating a list/edit admin screen, consider `createRecordModel` and `createCrudPanelModule`.
-6. If you need a composed module surface, use action-aware resources, `RecordSet`, panel registration, and the app-level `get` / `set` / `assign` helpers.
-7. If you are migrating older low-level script utilities, use the framework, template, activity, and socket helpers in Reactor instead of copying project-local files.
+5. Use primitive helpers when normalizing input values, lists, object paths, class names, and query numbers.
+6. If you are migrating a list/edit admin screen, consider `createRecordModel` and `createCrudPanelModule`.
+7. If you need a composed module surface, use action-aware resources, `RecordSet`, panel registration, and the app-level `get` / `set` / `assign` helpers.
+8. If you are migrating older low-level script utilities, use the framework, template, activity, and socket helpers in Reactor instead of copying project-local files.
 
 ## Basic app setup
 
@@ -77,6 +78,24 @@ const active = createSignal(8);
 
 const inactive = computed(() => total.value - active.value, [total, active]);
 ```
+
+## Normalizing Primitive Inputs
+
+```js
+import { Arr, Num, Obj, Str } from "@bluefission/reactor";
+
+const query = {
+  page: Num.toInteger(input.page, 1, { min: 1 }),
+  tags: Arr.toList(input.tags, { split: true }),
+  owner: Obj.getPath(input, "record.owner.name", "Unknown"),
+  className: Str.joinClassNames("resource-row", input.active && "is-active")
+};
+```
+
+Read:
+
+- `docs/primitives.md`
+- `examples/primitives.js`
 
 ## Composing A Resource Workspace
 

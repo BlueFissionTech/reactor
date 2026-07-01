@@ -4,7 +4,7 @@
 
 Reactor separates stable frontend concerns from project-local behavior:
 
-1. Core primitives handle data flow, transport, state, object behavior, and module lifecycle.
+1. Core primitives handle low-level helpers, data flow, transport, state, object behavior, and module lifecycle.
 2. Service and HTML layers provide DevElation-aligned request, response, gateway, and rendering helpers without hard coupling.
 3. Adapters integrate with legacy runtime assumptions such as jQuery and Blue Fission dashboard conventions.
 4. Application code composes modules and resources rather than mutating globals ad hoc.
@@ -29,6 +29,18 @@ Reactor separates stable frontend concerns from project-local behavior:
   - compatibility bridges for Blue Fission and jQuery ecosystems
 
 ## Core contracts
+
+### Primitive helper contract
+
+`src/core/primitives.js` keeps recurring normalization behavior in one package-owned surface:
+
+- value checks such as `isNil`, `isScalar`, `isEmpty`, and `hasValue`
+- list conversion through `toList`, `firstItem`, and `lastItem`
+- object access and copying through `getPath`, `setPath`, `pick`, and `omit`
+- string helpers such as `toText`, `dasherize`, and `joinClassNames`
+- number coercion through `toNumber`, `toInteger`, and `clampNumber`
+
+The grouped exports `Value`, `Arr`, `Obj`, `Str`, `Num`, and `Primitive` mirror the upstream primitive vocabulary while staying JavaScript-native and dependency-free.
 
 ### Response contract
 

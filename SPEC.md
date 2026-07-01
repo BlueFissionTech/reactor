@@ -23,6 +23,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 
 - The repo documents its purpose, scope, architecture, and roadmap.
 - The package exports a coherent public API from `src/index.js`.
+- The package exports first-class primitive helpers for value, array/list, object, string, and number normalization.
 - The library includes a response normalizer that understands Blue Fission payload shapes such as `data`, `status`, `list`, `id`, `query`, and `children`.
 - The library includes a transport layer with fetch-based requests and CRUD resource helpers.
 - The library includes a lightweight reactive primitive for state and DOM binding.
@@ -54,6 +55,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 ## Initial modules
 
 - Response normalization
+- Primitive helpers
 - Transport and CRUD resources
 - Module lifecycle
 - Binding contract descriptors

@@ -3,6 +3,7 @@
 ## Near term
 
 - Stabilize the package API and usage examples.
+- Fold repeated low-level helper logic into the first-class primitive surface as related modules mature.
 - Expand tests across CRUD resources, signals, DOM helpers, templates, record sets, and UI adapters.
 - Harden the dashboard shell, form helpers, rich surface contracts, and CRUD validation slices after review.
 - Add table, modal, and notification adapter slices surfaced by CRUD validation.

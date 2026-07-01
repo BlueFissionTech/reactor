@@ -12,6 +12,95 @@ Normalizes backend payloads into a predictable Blue Fission-friendly response ob
 
 Small wrapper around `normalizeResponse`.
 
+## Primitive helpers
+
+Primitive helpers are exported from the root package and from `@bluefission/reactor/primitives`.
+
+Grouped helper namespaces:
+
+- `Value`
+- `Arr`
+- `Obj`
+- `Str`
+- `Num`
+- `Primitive`
+
+### `isNil(value)`
+
+Checks for `null` or `undefined`.
+
+### `isScalar(value)`
+
+Checks for string, number, boolean, or bigint values.
+
+### `isEmpty(value, options?)`
+
+Returns true for nil values, empty strings, empty arrays, empty maps, empty sets, and empty plain objects. Strings are trimmed unless `options.trimString` is false.
+
+### `hasValue(value, options?)`
+
+Inverse of `isEmpty(...)`.
+
+### `toText(value, fallback?)`
+
+Converts nil values to the fallback and all other values to strings.
+
+### `toNumber(value, fallback?, options?)`
+
+Converts finite numeric input and supports `min` and `max` bounds.
+
+### `toInteger(value, fallback?, options?)`
+
+Parses integer input and supports `min` and `max` bounds.
+
+### `clampNumber(value, min?, max?)`
+
+Clamps a numeric value to optional bounds.
+
+### `toList(value, options?)`
+
+Returns a predictable array from arrays, scalars, sets, maps, iterables, or optionally split strings.
+
+### `firstItem(value, fallback?)`
+
+Returns the first normalized item.
+
+### `lastItem(value, fallback?)`
+
+Returns the last normalized item.
+
+### `isPlainObject(value)`
+
+Checks for object records while excluding arrays.
+
+### `objectEntries(value)`
+
+Returns safe object entries or an empty array.
+
+### `getPath(source, path, fallback?)`
+
+Reads a dotted path or segment array.
+
+### `setPath(source, path, value)`
+
+Returns a copied object or array with a nested value set.
+
+### `pick(source, keys)`
+
+Copies selected top-level keys.
+
+### `omit(source, keys)`
+
+Copies all top-level keys except the provided keys.
+
+### `dasherize(value)`
+
+Converts camel-case characters to dash-case.
+
+### `joinClassNames(...classes)`
+
+Flattens class inputs, removes blanks, and deduplicates names.
+
 ## Core transport
 
 ### `createTransport(options?)`

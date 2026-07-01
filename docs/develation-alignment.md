@@ -23,6 +23,28 @@ The comparison for this pass was based on:
 
 ## Current Reactor analogs
 
+### Primitive helpers
+
+DevElation concepts:
+
+- `Arr`
+- `Obj`
+- `Str`
+- `Num`
+- value normalization helpers
+
+Reactor analogs:
+
+- `Value`
+- `Arr`
+- `Obj`
+- `Str`
+- `Num`
+- `Primitive`
+- named helpers such as `toList(...)`, `getPath(...)`, `setPath(...)`, `joinClassNames(...)`, `toNumber(...)`, and `toInteger(...)`
+
+These helpers make primitive normalization first-class in Reactor without making Reactor's browser code depend on PHP classes or server-side runtime behavior.
+
 ### Request and response objects
 
 DevElation concepts:
@@ -139,11 +161,12 @@ It is designed to work well with:
 Use the layers like this:
 
 - use `createTransport(...)` or `createBlueFissionApi(...)` when you just need resource CRUD
+- use `Value`, `Arr`, `Obj`, `Str`, and `Num` helpers when normalizing JavaScript-side inputs, query state, class names, and object paths
 - use `createServiceClient(...)` when you want request and response pipelines closer to DevElation service objects
 - use `BehavioralObject` when the model should emit events and carry explicit state
 - use `Template`, `renderHtml(...)`, `renderTable(...)`, `renderForm(...)`, and `renderFormField(...)` for server-friendly HTML decoration without adopting a full frontend framework
 
-For concrete payloads, helper mapping, scoped styling, and service-client examples, see `docs/develation-integration.md` and `examples/develation-integration.js`.
+For concrete payloads, helper mapping, scoped styling, and service-client examples, see `docs/develation-integration.md`, `docs/primitives.md`, `examples/primitives.js`, and `examples/develation-integration.js`.
 
 ## Suggestions for DevElation
 
