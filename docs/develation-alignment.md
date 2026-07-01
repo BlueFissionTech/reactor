@@ -143,6 +143,8 @@ Use the layers like this:
 - use `BehavioralObject` when the model should emit events and carry explicit state
 - use `Template`, `renderHtml(...)`, `renderTable(...)`, `renderForm(...)`, and `renderFormField(...)` for server-friendly HTML decoration without adopting a full frontend framework
 
+For concrete payloads, helper mapping, scoped styling, and service-client examples, see `docs/develation-integration.md` and `examples/develation-integration.js`.
+
 ## Suggestions for DevElation
 
 Reactor can already align better with DevElation if DevElation also meets it halfway in a few places:

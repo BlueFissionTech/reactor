@@ -218,6 +218,7 @@ Relevant files:
 - `examples/resource-workspace.js`
 - `docs/module-composition.md`
 - `docs/develation-alignment.md`
+- `docs/develation-integration.md`
 
 ## HTML Helper Compatibility
 
@@ -248,9 +249,11 @@ const page = renderHtmlPage(renderResults(records), {
 Relevant files:
 
 - `examples/html-output-contracts.js`
+- `examples/develation-integration.js`
 - `src/html/theme.css`
 - `docs/api-reference.md`
 - `docs/develation-alignment.md`
+- `docs/develation-integration.md`
 
 ## Legacy script coverage
 
@@ -301,6 +304,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   normalized notification payload and dispatch conventions
 - `docs/develation-alignment.md`
   how Reactor aligns with DevElation service, net, html, and object patterns
+- `docs/develation-integration.md`
+  practical DevElation service, parser, HTML, XML, and object integration examples
 - `docs/legacy-script-coverage.md`
   mapping from the original `scripts` utilities to Reactor equivalents
 - `docs/dashboard-ui-interop.md`
