@@ -507,17 +507,133 @@ Methods:
 
 Escapes HTML-sensitive characters.
 
+### `renderAttributes(attributes?)`
+
+Renders an attribute object, string, or array into an HTML attribute string. Object values are escaped, boolean `true` renders a boolean attribute, and `false`/`null`/`undefined` are skipped.
+
+### `renderElement(tag, content?, attributes?, options?)`
+
+Renders an HTML element. String content is escaped by default; pass structured `{ html }` content or `options.trustedHtml` only when the caller owns the trust boundary.
+
+### `renderHtml(input?, options?)`
+
+Normalizes rendered output into an HTML string.
+
+Accepted forms include strings, renderable objects, `{ html }`, `{ output }`, `{ rendered }`, `{ renderedOutput }`, `{ rendered_output }`, `{ markdown }`, `{ text }`, element shapes, table shapes, form shapes, lists, nodes, fragments, blocks, and children.
+
+### `renderHtmlPage(content?, options?)`
+
+Wraps generated or already-rendered content in the optional Reactor HTML theme scope.
+
+Options:
+
+- `title`, `description`, and `kicker` render a scoped page header.
+- `actions` renders a scoped action row after the body.
+- `theme` maps to `data-theme`; `dark` is supported by the optional stylesheet.
+- `density` maps to `data-density`; `compact` tightens tables and controls.
+- `attributes` adds root attributes while preserving the `bf-reactor-html bf-rx-page` scope classes.
+
+Import `@bluefission/reactor/html.css` when a consistent baseline style is wanted. The stylesheet is opt-in and only targets `.bf-reactor-html` plus `bf-rx-*` helper classes.
+
+### `HtmlThemeClasses`
+
+Stable class-name map for consumers that need to compose their own wrapper, sections, tables, forms, pagination, result blocks, file links, media, bar graphs, or XML/code blocks while keeping the same non-colliding `bf-rx-*` naming.
+
+### `normalizeRenderedOutput(input?, options?)`
+
+Returns `{ html, source, empty }` for a rendered string or structured output envelope.
+
 ### `formatContent(content, options?)`
 
 Formats lightweight markup into HTML.
 
+### `normalizeHref(href?, options?)`
+
+Normalizes href values while preserving absolute URLs, root-relative URLs, hashes, and query-only links.
+
+### `renderImage(image, options?)`
+
+Renders an image tag and optionally wraps it in a link.
+
+### `renderFileLink(file, dirOrOptions?, options?)`
+
+Renders a link for supported document/media file names.
+
+### `renderPagination(listOrTotal, options?)`
+
+Renders pagination summary and page links for a list or count.
+
+### `renderResults(records?, options?)`
+
+Renders paginated record results with a table.
+
+### `renderBaseHref(href?, options?)`
+
+Renders a base href element.
+
+### `renderBarGraph(data?, options?)`
+
+Renders a small table-based bar graph from key/value data.
+
+### `nl2li(value, options?)`
+
+Converts newline-delimited text to list item elements.
+
+### `br2nl(value)`
+
+Converts HTML line breaks to newline characters.
+
+### `darkenHexColor(hex, amount?)`
+
+Darkens a hex color by reducing each hex digit. `darkerColor` is an alias.
+
+### `renderList(items?, options?)`
+
+Renders `ul` or `ol` list markup.
+
 ### `renderTable(records?, options?)`
 
-Renders a simple HTML table from row data.
+Renders an HTML table from row data. Cell values are escaped unless a column is marked with `{ html: true }`.
+
+### `renderDropdown(records?, options?)`
+
+Renders hidden query fields, a select control, and an optional submit button from records.
 
 ### `renderFormField(config?)`
 
-Renders a simple field, textarea, or select control.
+Renders a field, textarea, select, multiple select, checkbox, radio, date, time, file, static, submit, reset, or button control.
+
+### `renderDateField(name?, label?, value?, options?)`
+
+Renders a native date input by default, or month/day/year selects when `options.split` is true.
+
+### `splitDate(date, section?, timestamp?)`
+
+Extracts `day`, `month`, `year`, or an `M/D/Y` display string from an ISO-like date value.
+
+### `joinDateParts(name?, source?)`
+
+Builds an `M/D/Y` value from named date part fields.
+
+### `renderFormOpen(options?)`
+
+Renders a form opening tag.
+
+### `renderFormClose()`
+
+Renders a form closing tag.
+
+### `renderForm(fields?, options?)`
+
+Renders a wrapped form from field configs.
+
+### `renderFormValidation(fieldName?, fieldLabel?, criteria?)`
+
+Renders validation metadata for a field.
+
+### `renderXml(data?, options?)`
+
+Renders XML-like node data shaped as `{ name, attributes, content, child }`.
 
 ## Adapters
 

@@ -16,6 +16,8 @@ The comparison for this pass was based on:
 - `src/HTML/Form.php`
 - `src/HTML/Table.php`
 - `src/HTML/HTML.php`
+- `src/HTML/XML.php`
+- `src/Parsing/Parser.php`
 - `src/Obj.php`
 - behavioral event and state helpers
 
@@ -62,16 +64,51 @@ DevElation concepts:
 - `HTML\Form`
 - `HTML\Table`
 - `HTML\HTML`
+- `HTML\XML`
+- `Parsing\Parser::render()`
 
 Reactor analogs:
 
 - `Template`
-- `renderFormField(...)`
+- `renderHtml(...)`
+- `renderHtmlPage(...)`
+- `HtmlThemeClasses`
+- `normalizeRenderedOutput(...)`
+- `renderElement(...)`
+- `renderAttributes(...)`
 - `renderTable(...)`
+- `renderResults(...)`
+- `renderPagination(...)`
+- `renderForm(...)`
+- `renderFormOpen(...)`
+- `renderFormClose(...)`
+- `renderFormField(...)`
+- `renderDropdown(...)`
+- `renderDateField(...)`
+- `splitDate(...)`
+- `joinDateParts(...)`
 - `formatContent(...)`
 - `escapeHtml(...)`
+- `normalizeHref(...)`
+- `renderBaseHref(...)`
+- `renderImage(...)`
+- `renderFileLink(...)`
+- `renderList(...)`
+- `renderBarGraph(...)`
+- `nl2li(...)`
+- `br2nl(...)`
+- `darkenHexColor(...)`
+- `renderXml(...)`
 
-These are intentionally lightweight right now. They are helpers and decorators, not a full HTML object model.
+These are intentionally lightweight. They represent the upstream helper concepts without becoming a browser-side port of the PHP classes or their server/file-system assumptions.
+
+Compatibility rules:
+
+- Rendered strings from `Parsing\Parser::render()` and Vibrato `Reader::output()` can be passed directly to `renderHtml(...)`.
+- Structured rendered output may use `html`, `output`, `rendered`, `renderedOutput`, `rendered_output`, `markdown`, `text`, `records`, `rows`, `fields`, `items`, `nodes`, `fragments`, `blocks`, or `children`.
+- `{ text }`, table cells, form values, element child strings, and XML content are escaped by default.
+- `{ html }` and rendered output fields are treated as caller-owned HTML because those fields explicitly represent finished output.
+- `renderHtmlPage(...)` and `src/html/theme.css` provide an optional page-level style scope for helper output. Styling is rooted at `.bf-reactor-html` and `bf-rx-*` classes so applications can opt in without importing global CSS behavior.
 
 ### Evented objects
 
@@ -104,7 +141,9 @@ Use the layers like this:
 - use `createTransport(...)` or `createBlueFissionApi(...)` when you just need resource CRUD
 - use `createServiceClient(...)` when you want request and response pipelines closer to DevElation service objects
 - use `BehavioralObject` when the model should emit events and carry explicit state
-- use `Template`, `renderTable(...)`, and `renderFormField(...)` for server-friendly HTML decoration without adopting a full frontend framework
+- use `Template`, `renderHtml(...)`, `renderTable(...)`, `renderForm(...)`, and `renderFormField(...)` for server-friendly HTML decoration without adopting a full frontend framework
+
+For concrete payloads, helper mapping, scoped styling, and service-client examples, see `docs/develation-integration.md` and `examples/develation-integration.js`.
 
 ## Suggestions for DevElation
 
@@ -112,7 +151,7 @@ Reactor can already align better with DevElation if DevElation also meets it hal
 
 1. Standardize one normalized response envelope across service and net layers so JS clients do not need endpoint-specific coercion.
 2. Make gateway and client processors easier to mirror across PHP and JS by documenting request and response mutation stages explicitly.
-3. Keep HTML helpers escaping-first by default so template and table rendering have the same safety posture on both sides.
+3. Keep text-bearing HTML helpers escaping-first by default while documenting rendered-output fields as an explicit trust boundary.
 4. Publish event and state constant sets in a more transportable form so frontend and backend object models can share semantics without hard coupling.
 
 Those changes would improve DevElation itself while also making Reactor integration cleaner.

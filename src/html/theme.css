@@ -1,0 +1,317 @@
+:where(.bf-reactor-html) {
+  --bf-rx-font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bf-rx-mono-font-family: "Cascadia Code", Consolas, "SFMono-Regular", monospace;
+  --bf-rx-surface: #ffffff;
+  --bf-rx-surface-raised: #f9fbfe;
+  --bf-rx-surface-muted: #f2f5f9;
+  --bf-rx-text: #182235;
+  --bf-rx-text-muted: #5f6c7d;
+  --bf-rx-text-soft: #7a8594;
+  --bf-rx-border: #dce3ec;
+  --bf-rx-border-strong: #c4cfdd;
+  --bf-rx-accent: #2f6fe5;
+  --bf-rx-accent-soft: #e8f0ff;
+  --bf-rx-success: #257b4f;
+  --bf-rx-warning: #9a640f;
+  --bf-rx-danger: #b42318;
+  --bf-rx-shadow: 0 10px 28px rgba(24, 34, 53, 0.08);
+  --bf-rx-radius: 6px;
+  --bf-rx-radius-sm: 4px;
+  --bf-rx-gap: 0.75rem;
+  --bf-rx-control-height: 2.25rem;
+  display: grid;
+  gap: var(--bf-rx-gap);
+  color: var(--bf-rx-text);
+  background: var(--bf-rx-surface);
+  font-family: var(--bf-rx-font-family);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+:where(.bf-reactor-html[data-theme="dark"]) {
+  --bf-rx-surface: #151a22;
+  --bf-rx-surface-raised: #1c222c;
+  --bf-rx-surface-muted: #242b36;
+  --bf-rx-text: #edf2f8;
+  --bf-rx-text-muted: #a9b4c1;
+  --bf-rx-text-soft: #8793a1;
+  --bf-rx-border: #333c49;
+  --bf-rx-border-strong: #4b5564;
+  --bf-rx-accent: #62a1ff;
+  --bf-rx-accent-soft: rgba(98, 161, 255, 0.16);
+  --bf-rx-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+}
+
+:where(.bf-reactor-html[data-density="compact"]) {
+  --bf-rx-gap: 0.5rem;
+  --bf-rx-control-height: 2rem;
+  font-size: 0.86rem;
+}
+
+:where(.bf-reactor-html) :where(*) {
+  box-sizing: border-box;
+}
+
+:where(.bf-reactor-html) :where(a) {
+  color: var(--bf-rx-accent);
+  text-decoration: none;
+}
+
+:where(.bf-reactor-html) :where(a:hover, a:focus-visible) {
+  text-decoration: underline;
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-page__header) {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0 0 var(--bf-rx-gap);
+  border-bottom: 1px solid var(--bf-rx-border);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-page__kicker) {
+  margin: 0;
+  color: var(--bf-rx-accent);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-page__title) {
+  margin: 0;
+  color: var(--bf-rx-text);
+  font-size: 1.35rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-page__description) {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--bf-rx-text-muted);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-page__body) {
+  display: grid;
+  gap: var(--bf-rx-gap);
+  min-width: 0;
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-page__actions) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: var(--bf-rx-gap);
+  border-top: 1px solid var(--bf-rx-border);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-section, article, aside) {
+  min-width: 0;
+}
+
+:where(.bf-reactor-html) :where(h1, h2, h3, h4, h5, h6, p) {
+  overflow-wrap: anywhere;
+}
+
+:where(.bf-reactor-html) :where(h2, h3, h4) {
+  margin: 0.25rem 0;
+  color: var(--bf-rx-text);
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+:where(.bf-reactor-html) :where(p) {
+  margin: 0 0 0.75rem;
+}
+
+:where(.bf-reactor-html) :where(ul, ol, .bf-rx-list) {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+:where(.bf-reactor-html) :where(table, .bf-rx-table, .bf-rx-bar-graph, .dev_bar_graph) {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--bf-rx-border);
+  border-radius: var(--bf-rx-radius);
+  background: var(--bf-rx-surface);
+}
+
+:where(.bf-reactor-html) :where(th, td) {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--bf-rx-border);
+  color: var(--bf-rx-text);
+  text-align: left;
+  vertical-align: middle;
+}
+
+:where(.bf-reactor-html[data-density="compact"]) :where(th, td) {
+  padding: 0.45rem 0.55rem;
+}
+
+:where(.bf-reactor-html) :where(thead th) {
+  background: var(--bf-rx-surface-muted);
+  color: var(--bf-rx-text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+:where(.bf-reactor-html) :where(tbody tr:last-child td) {
+  border-bottom: 0;
+}
+
+:where(.bf-reactor-html) :where(tbody tr:hover td) {
+  background: var(--bf-rx-surface-raised);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-results) {
+  display: grid;
+  gap: var(--bf-rx-gap);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-pagination, nav[aria-label="Pagination"]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--bf-rx-text-muted);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-pagination a, nav[aria-label="Pagination"] a, a[aria-current="page"]) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--bf-rx-border);
+  border-radius: var(--bf-rx-radius-sm);
+  background: var(--bf-rx-surface);
+  text-decoration: none;
+}
+
+:where(.bf-reactor-html) :where(a[aria-current="page"]) {
+  border-color: var(--bf-rx-accent);
+  background: var(--bf-rx-accent-soft);
+  color: var(--bf-rx-accent);
+  font-weight: 700;
+}
+
+:where(.bf-reactor-html) :where(form, .bf-rx-form) {
+  display: grid;
+  gap: 0.65rem;
+}
+
+:where(.bf-reactor-html) :where(label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.25rem;
+  color: var(--bf-rx-text-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+:where(.bf-reactor-html) :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  width: 100%;
+  min-height: var(--bf-rx-control-height);
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--bf-rx-border);
+  border-radius: var(--bf-rx-radius-sm);
+  background: var(--bf-rx-surface);
+  color: var(--bf-rx-text);
+  font: inherit;
+}
+
+:where(.bf-reactor-html) :where(textarea) {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+:where(.bf-reactor-html) :where(input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible) {
+  outline: 2px solid var(--bf-rx-accent-soft);
+  border-color: var(--bf-rx-accent);
+}
+
+:where(.bf-reactor-html) :where(input[readonly], input:disabled, select:disabled, textarea:disabled) {
+  background: var(--bf-rx-surface-muted);
+  color: var(--bf-rx-text-soft);
+}
+
+:where(.bf-reactor-html) :where(input[type="checkbox"], input[type="radio"]) {
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0.35rem 0 0;
+  accent-color: var(--bf-rx-accent);
+}
+
+:where(.bf-reactor-html) :where(button, input[type="submit"], input[type="button"], .bf-rx-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--bf-rx-control-height);
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--bf-rx-accent);
+  border-radius: var(--bf-rx-radius-sm);
+  background: var(--bf-rx-accent);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+:where(.bf-reactor-html) :where(button:hover, input[type="submit"]:hover, input[type="button"]:hover, .bf-rx-button:hover) {
+  filter: brightness(0.96);
+}
+
+:where(.bf-reactor-html) :where(button:disabled, input[type="submit"]:disabled, input[type="button"]:disabled, .bf-rx-button[aria-disabled="true"]) {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+:where(.bf-reactor-html) :where(img, .bf-rx-media) {
+  max-width: 100%;
+  height: auto;
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-file-link) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-bar, .dev_bar) {
+  min-width: 2px;
+  border-radius: 999px;
+  background: var(--bf-rx-accent);
+}
+
+:where(.bf-reactor-html) :where(.bf-rx-xml, pre, code) {
+  font-family: var(--bf-rx-mono-font-family);
+}
+
+:where(.bf-reactor-html) :where(pre) {
+  overflow: auto;
+  padding: 0.8rem;
+  border: 1px solid var(--bf-rx-border);
+  border-radius: var(--bf-rx-radius);
+  background: var(--bf-rx-surface-muted);
+}
+
+@media (max-width: 720px) {
+  :where(.bf-reactor-html) :where(table, .bf-rx-table) {
+    display: block;
+    overflow-x: auto;
+  }
+
+  :where(.bf-reactor-html) :where(.bf-rx-page__actions) {
+    justify-content: stretch;
+  }
+
+  :where(.bf-reactor-html) :where(.bf-rx-page__actions > *) {
+    width: 100%;
+  }
+}

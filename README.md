@@ -121,7 +121,7 @@ The current public surface is:
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`
-  `escapeHtml`, `formatContent`, `renderTable`, `renderFormField`
+  `escapeHtml`, `renderHtml`, `renderHtmlPage`, `HtmlThemeClasses`, `renderElement`, `renderTable`, `renderForm`, `renderFormField`, `renderXml`, and small HTML utility helpers
 - `src/adapters/jquery.js`
   `createJQueryBridge`, `createJQueryNotifier`
 - `src/adapters/bluefission.js`
@@ -218,6 +218,42 @@ Relevant files:
 - `examples/resource-workspace.js`
 - `docs/module-composition.md`
 - `docs/develation-alignment.md`
+- `docs/develation-integration.md`
+
+## HTML Helper Compatibility
+
+The HTML helper group is intentionally small, but it now represents the reusable concepts from the upstream HTML utilities:
+
+- text formatting, href/base href normalization, images, files, pagination, result tables, lists, and bar graphs
+- form open/close, fields, dropdowns, date splitting/joining, and validation metadata
+- table rendering from row data
+- template/runtime output normalization through `renderHtml(...)`
+- XML-like node rebuilding through `renderXml(...)`
+
+`renderHtml(...)` accepts rendered strings as-is so output from parsing and runtime readers, including Vibrato `Reader::output()`, can be passed directly. Structured payloads can also use `html`, `output`, `rendered`, `renderedOutput`, `rendered_output`, `markdown`, `text`, `records`, `rows`, `fields`, `items`, `nodes`, `fragments`, `blocks`, or `children`.
+
+For text safety, use `{ text: value }`, table rows, and form field values; those are escaped by default. Use `{ html: value }` only when the caller owns the trust boundary.
+
+For a consistent optional baseline stylesheet, import `@bluefission/reactor/html.css` and wrap generated fragments with `renderHtmlPage(...)` or a root element using `class="bf-reactor-html"`. The stylesheet is intentionally scoped to that root and `bf-rx-*` helper classes, so it can coexist with app, framework, or platform CSS without acting as a global reset.
+
+```js
+import "@bluefission/reactor/html.css";
+import { renderHtmlPage, renderResults } from "@bluefission/reactor";
+
+const page = renderHtmlPage(renderResults(records), {
+  title: "Resource index",
+  density: "compact"
+});
+```
+
+Relevant files:
+
+- `examples/html-output-contracts.js`
+- `examples/develation-integration.js`
+- `src/html/theme.css`
+- `docs/api-reference.md`
+- `docs/develation-alignment.md`
+- `docs/develation-integration.md`
 
 ## Legacy script coverage
 
@@ -268,6 +304,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   normalized notification payload and dispatch conventions
 - `docs/develation-alignment.md`
   how Reactor aligns with DevElation service, net, html, and object patterns
+- `docs/develation-integration.md`
+  practical DevElation service, parser, HTML, XML, and object integration examples
 - `docs/legacy-script-coverage.md`
   mapping from the original `scripts` utilities to Reactor equivalents
 - `docs/dashboard-ui-interop.md`
