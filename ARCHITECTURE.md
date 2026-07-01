@@ -93,6 +93,8 @@ This lets Reactor models behave like data objects and event emitters at the same
 
 Rendered strings pass through `renderHtml(...)` because parser and runtime readers, including Vibrato `Reader::output()`, already return final output. Text-bearing structured fields such as `{ text }`, table cells, form values, XML content, and element children are escaped unless the caller explicitly provides an `{ html }` payload or trusted content option.
 
+`src/html/theme.css` is an optional presentation layer for helper output. It is not a global stylesheet or application theme. Rules are rooted at `.bf-reactor-html`, use low-specificity scoped selectors and `bf-rx-*` class hooks, and expose CSS custom properties for consuming applications that need to align colors, density, and surface treatments with their own shell.
+
 ### Module contract
 
 `createModule` gives each app unit explicit lifecycle hooks:

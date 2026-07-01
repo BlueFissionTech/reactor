@@ -1,6 +1,7 @@
 import {
   renderForm,
   renderHtml,
+  renderHtmlPage,
   renderResults,
   renderXml
 } from "../src/index.js";
@@ -40,6 +41,18 @@ const editForm = renderForm([
   action: "/resources"
 });
 
+const themedPage = renderHtmlPage([
+  renderHtml(structuredFragment),
+  editForm
+], {
+  title: "Resource workspace",
+  description: "Parser, runtime, record, and form output rendered inside the Reactor HTML scope.",
+  actions: [
+    { tag: "a", attributes: { href: "/resources" }, content: "View all" }
+  ],
+  density: "compact"
+});
+
 export const htmlOutputExamples = {
   parserRenderedOutput: renderHtml(parserRenderedOutput),
   runtimeEnvelope: renderHtml(runtimeEnvelope),
@@ -49,6 +62,7 @@ export const htmlOutputExamples = {
     headers: ["Title", "Status"],
     limit: 2
   }),
+  themedPage,
   editForm,
   xmlNode: renderXml({
     name: "RESOURCE",

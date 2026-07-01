@@ -1,10 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   br2nl,
   darkenHexColor,
   formatContent,
+  HtmlThemeClasses,
   joinDateParts,
   normalizeHref,
   normalizeRenderedOutput,
@@ -20,6 +22,7 @@ import {
   renderFormField,
   renderFormValidation,
   renderHtml,
+  renderHtmlPage,
   renderImage,
   renderList,
   renderResults,
@@ -29,6 +32,7 @@ import {
 } from "../src/html/helpers.js";
 import {
   renderHtml as renderHtmlFromIndex,
+  renderHtmlPage as renderHtmlPageFromIndex,
   renderXml as renderXmlFromIndex
 } from "../src/index.js";
 
@@ -117,7 +121,38 @@ test("table, results, and graph helpers normalize record-oriented payloads", () 
 
   const graph = renderBarGraph({ done: 5, total: 10 }, { max: 10 });
   assert.match(graph, /dev_bar_graph/);
+  assert.match(graph, /bf-rx-bar-graph/);
   assert.match(graph, /width: 50\.00%/);
+});
+
+test("html theme helpers provide an opt-in scoped page template", () => {
+  const page = renderHtmlPage({ output: "<table><tbody><tr><td>Ready</td></tr></tbody></table>" }, {
+    title: "Resource view",
+    description: "Generated output rendered with a local style scope.",
+    actions: { tag: "a", attributes: { href: "/resources" }, content: "Back" },
+    theme: "dark",
+    density: "compact",
+    attributes: {
+      id: "resource-view",
+      className: "custom-scope"
+    }
+  });
+
+  assert.match(page, /^<section/);
+  assert.match(page, /class="bf-reactor-html bf-rx-page custom-scope"/);
+  assert.match(page, /data-reactor-html="true"/);
+  assert.match(page, /data-theme="dark"/);
+  assert.match(page, /data-density="compact"/);
+  assert.match(page, /<h1 class="bf-rx-page__title">Resource view<\/h1>/);
+  assert.match(page, /<div class="bf-rx-page__body"><table>/);
+  assert.match(page, /<div class="bf-rx-page__actions"><a href="\/resources">Back<\/a><\/div>/);
+  assert.equal(HtmlThemeClasses.root, "bf-reactor-html");
+  assert.match(renderHtmlPageFromIndex("<p>Indexed</p>"), /bf-reactor-html/);
+
+  const css = readFileSync(new URL("../src/html/theme.css", import.meta.url), "utf8");
+  assert.match(css, /:where\(\.bf-reactor-html\)/);
+  assert.match(css, /--bf-rx-surface/);
+  assert.doesNotMatch(css, /(^|[\r\n])\s*(html|body|table|form|button|input|select|textarea|a)\s*\{/);
 });
 
 test("form helpers cover fields, dropdowns, wrappers, and date splitting", () => {

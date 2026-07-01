@@ -120,9 +120,11 @@ export {
 
 export {
   escapeHtml,
+  HtmlThemeClasses,
   renderAttributes,
   renderElement,
   renderHtml,
+  renderHtmlPage,
   normalizeRenderedOutput,
   formatContent,
   normalizeHref,

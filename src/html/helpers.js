@@ -17,6 +17,31 @@ const VOID_TAGS = new Set([
   "wbr"
 ]);
 
+export const HtmlThemeClasses = Object.freeze({
+  root: "bf-reactor-html",
+  page: "bf-rx-page",
+  header: "bf-rx-page__header",
+  kicker: "bf-rx-page__kicker",
+  title: "bf-rx-page__title",
+  description: "bf-rx-page__description",
+  body: "bf-rx-page__body",
+  actions: "bf-rx-page__actions",
+  section: "bf-rx-section",
+  table: "bf-rx-table",
+  results: "bf-rx-results",
+  pagination: "bf-rx-pagination",
+  form: "bf-rx-form",
+  field: "bf-rx-field",
+  control: "bf-rx-control",
+  button: "bf-rx-button",
+  list: "bf-rx-list",
+  media: "bf-rx-media",
+  fileLink: "bf-rx-file-link",
+  barGraph: "bf-rx-bar-graph",
+  bar: "bf-rx-bar",
+  xml: "bf-rx-xml"
+});
+
 export function escapeHtml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -138,6 +163,20 @@ export function renderHtml(input = "", options = {}) {
   }
 
   return escapeHtml(JSON.stringify(input));
+}
+
+export function renderHtmlPage(content = "", options = {}) {
+  const renderOptions = options.renderOptions ?? {};
+  const attributes = normalizePageAttributes(options);
+  const header = renderPageHeader(options);
+  const body = renderElement("div", { html: renderHtml(content, renderOptions) }, {
+    class: HtmlThemeClasses.body
+  });
+  const actions = options.actions
+    ? renderElement("div", { html: renderHtml(options.actions, renderOptions) }, { class: HtmlThemeClasses.actions })
+    : "";
+
+  return renderElement(options.tag ?? "section", { html: `${header}${body}${actions}` }, attributes);
 }
 
 export function normalizeRenderedOutput(input = "", options = {}) {
@@ -334,7 +373,7 @@ export function renderBarGraph(data = {}, options = {}) {
       label,
       bar: {
         html: renderElement("div", "", {
-          class: options.barClass ?? "dev_bar",
+          class: options.barClass ?? joinClassNames(HtmlThemeClasses.bar, "dev_bar"),
           style: `width: ${percent.toFixed(2)}%; height: ${options.barHeight ?? 5}px;`
         })
       },
@@ -350,7 +389,7 @@ export function renderBarGraph(data = {}, options = {}) {
     ],
     headers: options.headers ?? ["", "", ""],
     attributes: {
-      class: options.className ?? "dev_bar_graph"
+      class: joinClassNames(HtmlThemeClasses.barGraph, options.className ?? "dev_bar_graph")
     }
   });
 }
@@ -820,6 +859,41 @@ function detectRenderedOutputSource(input) {
   return "structured";
 }
 
+function normalizePageAttributes(options = {}) {
+  const {
+    class: attributeClass,
+    className: attributeClassName,
+    ...extraAttributes
+  } = options.attributes ?? {};
+  const className = joinClassNames(
+    HtmlThemeClasses.root,
+    HtmlThemeClasses.page,
+    options.className ?? options.class,
+    attributeClassName,
+    attributeClass
+  );
+
+  return {
+    ...extraAttributes,
+    class: className,
+    "data-reactor-html": extraAttributes["data-reactor-html"] ?? "true",
+    "data-theme": options.theme ?? extraAttributes["data-theme"],
+    "data-density": options.density ?? extraAttributes["data-density"]
+  };
+}
+
+function renderPageHeader(options = {}) {
+  const parts = [
+    options.kicker ? renderElement("p", options.kicker, { class: HtmlThemeClasses.kicker }) : "",
+    options.title ? renderElement(options.titleTag ?? "h1", options.title, { class: HtmlThemeClasses.title }) : "",
+    options.description ? renderElement("p", options.description, { class: HtmlThemeClasses.description }) : ""
+  ].filter(Boolean).join("");
+
+  return parts
+    ? renderElement("header", { html: parts }, { class: HtmlThemeClasses.header })
+    : "";
+}
+
 function cellValue(record, column) {
   if (typeof column === "function") {
     return column(record);
@@ -895,6 +969,15 @@ function linkify(content) {
 
 function dasherize(value) {
   return String(value).replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`);
+}
+
+function joinClassNames(...classes) {
+  return classes
+    .flatMap((className) => Array.isArray(className) ? className : String(className ?? "").split(/\s+/))
+    .map((className) => className.trim())
+    .filter(Boolean)
+    .filter((className, index, list) => list.indexOf(className) === index)
+    .join(" ");
 }
 
 function isScalar(value) {

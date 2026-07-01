@@ -121,7 +121,7 @@ The current public surface is:
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`
-  `escapeHtml`, `renderHtml`, `renderElement`, `renderTable`, `renderForm`, `renderFormField`, `renderXml`, and small HTML utility helpers
+  `escapeHtml`, `renderHtml`, `renderHtmlPage`, `HtmlThemeClasses`, `renderElement`, `renderTable`, `renderForm`, `renderFormField`, `renderXml`, and small HTML utility helpers
 - `src/adapters/jquery.js`
   `createJQueryBridge`, `createJQueryNotifier`
 - `src/adapters/bluefission.js`
@@ -233,9 +233,22 @@ The HTML helper group is intentionally small, but it now represents the reusable
 
 For text safety, use `{ text: value }`, table rows, and form field values; those are escaped by default. Use `{ html: value }` only when the caller owns the trust boundary.
 
+For a consistent optional baseline stylesheet, import `@bluefission/reactor/html.css` and wrap generated fragments with `renderHtmlPage(...)` or a root element using `class="bf-reactor-html"`. The stylesheet is intentionally scoped to that root and `bf-rx-*` helper classes, so it can coexist with app, framework, or platform CSS without acting as a global reset.
+
+```js
+import "@bluefission/reactor/html.css";
+import { renderHtmlPage, renderResults } from "@bluefission/reactor";
+
+const page = renderHtmlPage(renderResults(records), {
+  title: "Resource index",
+  density: "compact"
+});
+```
+
 Relevant files:
 
 - `examples/html-output-contracts.js`
+- `src/html/theme.css`
 - `docs/api-reference.md`
 - `docs/develation-alignment.md`
 

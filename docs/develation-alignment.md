@@ -71,6 +71,8 @@ Reactor analogs:
 
 - `Template`
 - `renderHtml(...)`
+- `renderHtmlPage(...)`
+- `HtmlThemeClasses`
 - `normalizeRenderedOutput(...)`
 - `renderElement(...)`
 - `renderAttributes(...)`
@@ -106,6 +108,7 @@ Compatibility rules:
 - Structured rendered output may use `html`, `output`, `rendered`, `renderedOutput`, `rendered_output`, `markdown`, `text`, `records`, `rows`, `fields`, `items`, `nodes`, `fragments`, `blocks`, or `children`.
 - `{ text }`, table cells, form values, element child strings, and XML content are escaped by default.
 - `{ html }` and rendered output fields are treated as caller-owned HTML because those fields explicitly represent finished output.
+- `renderHtmlPage(...)` and `src/html/theme.css` provide an optional page-level style scope for helper output. Styling is rooted at `.bf-reactor-html` and `bf-rx-*` classes so applications can opt in without importing global CSS behavior.
 
 ### Evented objects
 

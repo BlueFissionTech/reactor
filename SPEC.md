@@ -32,6 +32,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 - The library includes reusable surface contract descriptors for media, dialogue, scene, overlay, panel, notification, choice, and command surfaces.
 - The library includes an HTML helper group that covers reusable formatting, element, table, form, pagination, media/file, graph, XML-like node, and rendered-output normalization needs.
 - The HTML helper group accepts rendered strings from parsing/runtime flows and structured payloads with `html`, `output`, `rendered`, `renderedOutput`, `rendered_output`, `markdown`, `text`, `records`, `rows`, `fields`, `items`, `nodes`, `fragments`, `blocks`, or `children`.
+- The HTML helper group includes an optional scoped style template for generated pages. It must only style content inside the Reactor HTML root, use stable `bf-rx-*` hooks, and avoid global element resets or app-specific layout assumptions.
 - The library includes a module lifecycle abstraction suitable for dashboard and admin modules.
 - The library includes a jQuery interoperability layer so existing apps can adopt it immediately.
 - The design explicitly treats jQuery as a compatibility layer, not the long-term core.

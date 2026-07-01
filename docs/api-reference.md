@@ -521,6 +521,24 @@ Normalizes rendered output into an HTML string.
 
 Accepted forms include strings, renderable objects, `{ html }`, `{ output }`, `{ rendered }`, `{ renderedOutput }`, `{ rendered_output }`, `{ markdown }`, `{ text }`, element shapes, table shapes, form shapes, lists, nodes, fragments, blocks, and children.
 
+### `renderHtmlPage(content?, options?)`
+
+Wraps generated or already-rendered content in the optional Reactor HTML theme scope.
+
+Options:
+
+- `title`, `description`, and `kicker` render a scoped page header.
+- `actions` renders a scoped action row after the body.
+- `theme` maps to `data-theme`; `dark` is supported by the optional stylesheet.
+- `density` maps to `data-density`; `compact` tightens tables and controls.
+- `attributes` adds root attributes while preserving the `bf-reactor-html bf-rx-page` scope classes.
+
+Import `@bluefission/reactor/html.css` when a consistent baseline style is wanted. The stylesheet is opt-in and only targets `.bf-reactor-html` plus `bf-rx-*` helper classes.
+
+### `HtmlThemeClasses`
+
+Stable class-name map for consumers that need to compose their own wrapper, sections, tables, forms, pagination, result blocks, file links, media, bar graphs, or XML/code blocks while keeping the same non-colliding `bf-rx-*` naming.
+
 ### `normalizeRenderedOutput(input?, options?)`
 
 Returns `{ html, source, empty }` for a rendered string or structured output envelope.
