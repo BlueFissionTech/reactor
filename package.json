@@ -1,7 +1,7 @@
 {
   "name": "@bluefission/reactor",
   "version": "0.1.0",
-  "description": "Frontend primitives for Blue Fission internal applications.",
+  "description": "Frontend primitives, bindings, and browser adapters for Blue Fission applications.",
   "type": "module",
   "main": "./src/index.js",
   "module": "./src/index.js",
@@ -30,21 +30,38 @@
   "files": [
     "src",
     "docs",
+    "LICENSE",
     "README.md",
+    "SECURITY.md",
     "SPEC.md",
     "ARCHITECTURE.md",
     "ROADMAP.md"
   ],
   "scripts": {
     "check": "node --check src/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "verify:release": "node tools/verify-release.js",
+    "prepublishOnly": "npm test && npm run check && npm run verify:release"
   },
   "keywords": [
     "bluefission",
+    "develation",
     "frontend",
     "jquery",
     "dashboard",
     "bluecore"
   ],
-  "license": "UNLICENSED"
+  "author": "Blue Fission Technology",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlueFissionTech/reactor.git"
+  },
+  "homepage": "https://github.com/BlueFissionTech/reactor#readme",
+  "bugs": {
+    "url": "https://github.com/BlueFissionTech/reactor/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
