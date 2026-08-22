@@ -16,6 +16,14 @@ test("public package metadata identifies the reviewed Reactor source", () => {
   assert.equal(packageJson.bugs.url, "https://github.com/BlueFissionTech/reactor/issues");
 });
 
+test("public CRUD exports use neutral resource terminology", () => {
+  assert.equal(
+    packageJson.exports["./resource-crud"],
+    "./src/adapters/resource-crud.js"
+  );
+  assert.equal(packageJson.exports["./opus-crud"], undefined);
+});
+
 test("release identity requires a tag matching the immutable package version", () => {
   assert.deepEqual(verifyRelease({ packageJson, tag: "v0.1.0" }), {
     name: "@bluefission/reactor",

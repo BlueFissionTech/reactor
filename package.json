@@ -25,7 +25,7 @@
     "./html.css": "./src/html/theme.css",
     "./jquery": "./src/adapters/jquery.js",
     "./bluefission": "./src/adapters/bluefission.js",
-    "./opus-crud": "./src/adapters/opus-crud.js"
+    "./resource-crud": "./src/adapters/resource-crud.js"
   },
   "files": [
     "src",

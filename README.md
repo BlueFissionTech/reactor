@@ -128,7 +128,7 @@ The current public surface is:
   `createJQueryBridge`, `createJQueryNotifier`
 - `src/adapters/bluefission.js`
   `createBlueFissionApi`, `createBlueFissionApp`
-- `src/adapters/opus-crud.js`
+- `src/adapters/resource-crud.js`
   `createRecordModel`, `createCrudPanelModule`
 - `src/browser/activity.js`
   `createActivityTracker`
@@ -200,9 +200,9 @@ That adapter captures the recurring shape used by many internal screens:
 
 Relevant files:
 
-- `src/adapters/opus-crud.js`
+- `src/adapters/resource-crud.js`
 - `examples/crud-panel-module.js`
-- `docs/opus-migration.md`
+- `docs/legacy-crud-migration.md`
 
 ## General Module Composition
 
@@ -346,7 +346,7 @@ Reactor is available under the MIT License. See `LICENSE`.
   status of legacy `dashboard-ui` features and how they relate to jQuery
 - `docs/dashboard-utility-map.md`
   method-level ownership map for legacy dashboard utility extraction
-- `docs/opus-migration.md`
+- `docs/legacy-crud-migration.md`
   compatibility notes for older CRUD-oriented module patterns
 - `docs/crud-validation.md`
   validation notes for the extracted CRUD adapter and its remaining general gaps

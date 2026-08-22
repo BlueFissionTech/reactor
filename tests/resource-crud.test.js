@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
   createCrudPanelModule,
   createRecordModel
-} from "../src/adapters/opus-crud.js";
+} from "../src/adapters/resource-crud.js";
 
 test("CRUD panel modules run a representative list edit save delete flow", async () => {
   const bridge = createBridgeRecorder();

@@ -214,5 +214,5 @@ const module = createCrudPanelModule({
 1. Read `README.md` for intent and positioning.
 2. Read `docs/api-reference.md` to see the actual exported API.
 3. Read `docs/module-composition.md` if you are composing resources, records, panels, and bindings.
-4. Read `docs/opus-migration.md` if you are replacing legacy CRUD-oriented module code.
+4. Read `docs/legacy-crud-migration.md` if you are replacing legacy CRUD-oriented module code.
 5. Read `ARCHITECTURE.md` if you are making library-level design decisions.

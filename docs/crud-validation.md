@@ -14,7 +14,7 @@ The validated flow is intentionally neutral:
 - notification handoff
 - lifecycle cleanup for registered event handlers
 
-The executable coverage lives in `tests/opus-crud.test.js`. It uses plain test doubles for the resource, bridge, and UI collaborators so the contract stays service-free and portable.
+The executable coverage lives in `tests/resource-crud.test.js`. It uses plain test doubles for the resource, bridge, and UI collaborators so the contract stays service-free and portable.
 
 ## Reactor-Owned Contract
 
