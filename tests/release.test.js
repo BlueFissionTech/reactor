@@ -49,3 +49,12 @@ test("MIT license and security reporting instructions are publication inputs", (
   assert.match(license, /Blue Fission Technology/);
   assert.match(security, /security\/advisories\/new/);
 });
+
+test("release guidance covers first-time organization and trust bootstrap", () => {
+  const guide = readFileSync(new URL("../docs/releasing.md", import.meta.url), "utf8");
+
+  assert.match(guide, /Unlimited public packages/);
+  assert.match(guide, /npm team ls bluefission:developers/);
+  assert.match(guide, /bypass-2FA option/);
+  assert.match(guide, /npm trust github @bluefission\/reactor/);
+});
