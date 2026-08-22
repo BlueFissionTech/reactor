@@ -193,7 +193,7 @@ export {
 export {
   createRecordModel,
   createCrudPanelModule
-} from "./adapters/opus-crud.js";
+} from "./adapters/resource-crud.js";
 
 export {
   createActivityTracker
