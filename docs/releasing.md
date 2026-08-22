@@ -9,6 +9,8 @@ Reactor is a public MIT-licensed companion to DevElation and publishes under the
 - The GitHub release tag must equal `v` plus the `package.json` version.
 - Public releases use `publishConfig.access=public`.
 - Tests, syntax checks, package inspection, and release identity verification must pass before publication.
+- Normal releases authenticate only through the package's npm trusted publisher and GitHub Actions OIDC.
+- Package publishing requires two-factor authentication and disallows traditional access tokens.
 - Do not place npm credentials in the repository, workflow source, logs, or release notes.
 
 ## Registry ownership prerequisites
@@ -25,31 +27,11 @@ npm whoami
 npm team ls bluefission:developers
 ```
 
-An `E404` from `npm view @bluefission/reactor` is expected before the first publication. An authentication or organization error from the membership check must be resolved before creating release credentials.
-
-## Initial `0.1.0` publication
-
-The npm registry cannot configure a package-level trusted publisher until the package exists. Bootstrap the first release with a short-lived granular npm token, then remove it after OIDC trust is configured.
-
-1. Confirm the `bluefission` npm organization exists and the publishing account has write access and two-factor authentication.
-2. Merge all changes intended for `0.1.0`, including the production socket lifecycle contract.
-3. Protect the GitHub `npm` environment with required reviewer approval.
-4. Create a granular npm token limited to package publication, with the minimum lifetime and permissions needed for the first release. Direct publication requires the token's bypass-2FA option; revoke the token immediately after trusted publishing is configured.
-5. Store that token as the repository environment secret `NPM_TOKEN`. Never place it in a file.
-6. From the exact reviewed `main` commit, create and publish the GitHub release `v0.1.0`.
-7. The `publish.yml` workflow verifies the tag, runs the suite, inspects the tarball, and publishes the public package with provenance.
-8. Verify the live artifact and exact install from a clean directory.
-
-```bash
-npm view @bluefission/reactor@0.1.0
-npm install --save-exact @bluefission/reactor@0.1.0
-node -e "import('@bluefission/reactor').then((module) => console.log(typeof module.createSignal))"
-node -e "import('@bluefission/reactor/socket').then((module) => console.log(typeof module.createSocketClient))"
-```
+An authentication or organization error from the membership check must be resolved before changing package ownership or access.
 
 ## Trusted publishing
 
-After `0.1.0` exists, configure its npm trusted publisher with:
+The package trusted publisher is configured with:
 
 - provider: GitHub Actions
 - organization: `BlueFissionTech`
@@ -58,13 +40,44 @@ After `0.1.0` exists, configure its npm trusted publisher with:
 - environment: `npm`
 - allowed action: `npm publish`
 
-With an authenticated npm CLI that supports trust management, the equivalent configuration is:
+The workflow grants `id-token: write`, uses Node.js 24 and an OIDC-capable npm CLI, and publishes only from a GitHub release tag. npm exchanges the workflow identity for a short-lived credential bound to this repository, workflow, environment, and action. No `NODE_AUTH_TOKEN` or `NPM_TOKEN` secret is used.
+
+See npm's [trusted publishing documentation](https://docs.npmjs.com/trusted-publishers/) for the registry contract and supported runtime versions.
+
+## Release procedure
+
+1. Merge the reviewed version, release notes, and package changes to `main`.
+2. Create and publish a GitHub release whose tag is `v` plus the exact `package.json` version.
+3. Approve the protected `npm` environment deployment when required.
+4. Let `publish.yml` verify the release identity, run the suite, inspect the tarball, and publish through OIDC with provenance.
+5. Verify the live artifact and an exact install from a clean directory.
 
 ```bash
-npm trust github @bluefission/reactor --repo BlueFissionTech/reactor --file publish.yml --env npm --allow-publish --yes
+npm view @bluefission/reactor@<version>
+npm install --save-exact @bluefission/reactor@<version>
+node -e "import('@bluefission/reactor').then((module) => console.log(typeof module.createSignal))"
+node -e "import('@bluefission/reactor/socket').then((module) => console.log(typeof module.createSocketClient))"
 ```
 
-Run the next release through the workflow to verify OIDC publishing, then delete and revoke `NPM_TOKEN`. The workflow keeps the secret reference only as a first-publication fallback; an absent secret resolves empty while the npm CLI uses the trusted OIDC identity.
+## Access token policy
+
+Reactor has no standing npm publish token. Do not add `NPM_TOKEN`, a bypass-2FA token, or another write credential to the repository or its release environment. Trusted publishing is the long-term release credential.
+
+The package currently has no private registry dependencies, so the workflow also needs no install token. If a future reviewed dependency is private, use a separate `NPM_READ_TOKEN` only for the install step. That token must be granular, read-only, limited to the required package or scope, have no organization-management access, keep bypass 2FA disabled, expire within 30 days, and be rotated or revoked when the dependency is removed. Store it only in the protected `npm` environment.
+
+See npm's [access token guidance](https://docs.npmjs.com/about-access-tokens/) for the registry's current granular-token controls.
+
+## Break-glass publication
+
+If OIDC publication fails, first correct or retry the reviewed workflow without changing the tag or package version. When an urgent release cannot wait for workflow recovery, a maintainer may publish the exact reviewed tag interactively from a clean checkout with a second maintainer's approval:
+
+```bash
+npm publish --access public
+```
+
+The maintainer must authenticate interactively and complete npm's two-factor challenge. This exceptional path does not produce the GitHub-backed provenance of the normal workflow. Do not weaken the package publishing policy or create a bypass-2FA token for emergency publication. Record the reason, missing automated provenance, and verification result on the release issue.
+
+The next versioned release should confirm the OIDC-only path before any other release automation changes are accepted.
 
 ## Versioning
 

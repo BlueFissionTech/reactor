@@ -49,6 +49,3 @@ jobs:
 
       - name: Publish public package
         run: npm publish --provenance --access public
-        env:
-          # Required for the first publication only. Trusted publishing uses OIDC first.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

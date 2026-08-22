@@ -38,15 +38,16 @@ test("release identity requires a tag matching the immutable package version", (
   );
 });
 
-test("publication workflow uses release tags, OIDC, provenance, and public access", () => {
+test("publication workflow uses release tags and OIDC without a standing token", () => {
   const workflow = readFileSync(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
 
   assert.match(workflow, /types: \[published\]/);
   assert.match(workflow, /id-token: write/);
   assert.match(workflow, /node-version: "24"/);
+  assert.match(workflow, /npm install --global npm@\^11\.5\.1/);
   assert.match(workflow, /npm run verify:release/);
   assert.match(workflow, /npm publish --provenance --access public/);
-  assert.match(workflow, /NODE_AUTH_TOKEN: \$\{\{ secrets\.NPM_TOKEN \}\}/);
+  assert.doesNotMatch(workflow, /NODE_AUTH_TOKEN|NPM_TOKEN/);
 });
 
 test("MIT license and security reporting instructions are publication inputs", () => {
@@ -58,11 +59,14 @@ test("MIT license and security reporting instructions are publication inputs", (
   assert.match(security, /security\/advisories\/new/);
 });
 
-test("release guidance covers first-time organization and trust bootstrap", () => {
+test("release guidance defines tokenless publishing and bounded recovery", () => {
   const guide = readFileSync(new URL("../docs/releasing.md", import.meta.url), "utf8");
 
   assert.match(guide, /Unlimited public packages/);
   assert.match(guide, /npm team ls bluefission:developers/);
-  assert.match(guide, /bypass-2FA option/);
-  assert.match(guide, /npm trust github @bluefission\/reactor/);
+  assert.match(guide, /no standing npm publish token/i);
+  assert.match(guide, /NPM_READ_TOKEN/);
+  assert.match(guide, /expire within 30 days/);
+  assert.match(guide, /authenticate interactively and complete npm's two-factor challenge/);
+  assert.doesNotMatch(guide, /secrets\.NPM_TOKEN|Store that token as.*NPM_TOKEN/);
 });
