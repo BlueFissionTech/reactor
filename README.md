@@ -1,12 +1,12 @@
 # Reactor
 
-Reactor is the shared frontend foundation for Blue Fission internal products.
+Reactor is the shared frontend foundation for Blue Fission applications and compatible browser projects.
 
 It exists to replace copied, project-local JavaScript with a package that has a clear API, a stable mental model, and a practical migration path from current Blue Fission frontend code. Today that means supporting legacy jQuery-heavy screens while moving reusable behavior into framework-agnostic primitives.
 
 ## What Reactor is
 
-Reactor is a small internal library for:
+Reactor is a small frontend library for:
 
 - normalizing Blue Fission response payloads
 - calling backend APIs with a reusable transport and CRUD layer
@@ -302,7 +302,13 @@ Reactor is deliberately pragmatic:
 - backend compatibility matters more than frontend fashion
 - migration is favored over rewrite theater
 
-This is an internal platform library. Its value is not novelty. Its value is reducing drift across projects while giving us a cleaner path forward.
+This is a platform library. Its value is not novelty. Its value is reducing drift across projects while giving us a cleaner path forward.
+
+Reactor is a public MIT-licensed companion to DevElation for JavaScript and browser-facing concerns.
+
+## License
+
+Reactor is available under the MIT License. See `LICENSE`.
 
 ## Document map
 
@@ -312,6 +318,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   first practical steps and composition patterns
 - `docs/socket-lifecycle.md`
   authenticated bootstrap, reconnect, heartbeat, queue, ordering, and teardown contracts
+- `docs/releasing.md`
+  public npm publication, trusted publishing, provenance, and versioning workflow
 - `docs/api-reference.md`
   current public API summary
 - `docs/module-composition.md`

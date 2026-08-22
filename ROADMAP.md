@@ -10,6 +10,7 @@
 - Validate additional module composition paths while keeping examples domain-neutral.
 - Use the dashboard utility ownership map to keep future adapter extraction small and testable.
 - Validate the production socket lifecycle contract across representative browser application adapters.
+- Publish the reviewed MIT-licensed `0.1.0` baseline and configure trusted npm releases.
 
 ## Mid term
 
@@ -17,7 +18,7 @@
 - Provide richer table/list, modal flow, and notification adapters.
 - Replace document-ready global bootstrapping with explicit app startup patterns.
 - Expand DevElation-aligned request and object semantics where that improves interop without coupling.
-- Publish versioned packages for internal npm consumption.
+- Maintain versioned public npm releases for exact internal and external consumption.
 
 ## Long term
 
