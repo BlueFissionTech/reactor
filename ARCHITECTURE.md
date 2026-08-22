@@ -27,6 +27,8 @@ Reactor separates stable frontend concerns from project-local behavior:
   - lightweight rendering decorators
 - `src/adapters`
   - compatibility bridges for Blue Fission and jQuery ecosystems
+- `src/browser`
+  - browser-edge activity and socket lifecycle utilities
 
 ## Core contracts
 
@@ -121,6 +123,10 @@ Plugins can extend the module context without forcing a framework choice.
 ### Binding contract
 
 `createBindingContract` describes the expected handoff between host application state and Reactor bindings. It keeps inputs, outputs, events, states, selectors, lifecycle steps, and ownership boundaries inspectable without forcing a renderer or product-specific adapter.
+
+### Socket lifecycle contract
+
+`createSocketClient` owns browser WebSocket connection state, per-attempt bootstrap, optional reconnect and heartbeat policy, FIFO pre-open queueing, and cleanup. It does not own authentication policy, application message schemas, acknowledgement, replay, deduplication, or exactly-once processing. Those concerns remain behind application and protocol ports.
 
 ## Interop direction
 

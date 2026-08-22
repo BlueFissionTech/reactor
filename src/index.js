@@ -200,5 +200,6 @@ export {
 } from "./browser/activity.js";
 
 export {
+  SocketStates,
   createSocketClient
 } from "./browser/socket.js";

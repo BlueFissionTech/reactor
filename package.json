@@ -20,6 +20,7 @@
     "./table-list": "./src/ui/table-list.js",
     "./forms": "./src/ui/forms.js",
     "./notifications": "./src/ui/notifications.js",
+    "./socket": "./src/browser/socket.js",
     "./html": "./src/html/helpers.js",
     "./html.css": "./src/html/theme.css",
     "./jquery": "./src/adapters/jquery.js",
