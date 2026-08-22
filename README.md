@@ -133,14 +133,14 @@ The current public surface is:
 - `src/browser/activity.js`
   `createActivityTracker`
 - `src/browser/socket.js`
-  `createSocketClient`
+  `SocketStates`, `createSocketClient`
 
 ## Quick start
 
-NPM is the preferred consumption path:
+The package manifest is fixed at `0.1.0`. Once that version is available from the configured npm registry, consume it with an exact constraint:
 
 ```bash
-npm install @bluefission/reactor
+npm install --save-exact @bluefission/reactor@0.1.0
 ```
 
 Then build an app with explicit resources and state:
@@ -298,6 +298,7 @@ Reactor is deliberately pragmatic:
 - jQuery support stays available because current products need it
 - jQuery is treated as an adapter, not the permanent core
 - npm installation is preferred, but direct inclusion remains possible
+- exact version constraints are preferred for production adoption
 - backend compatibility matters more than frontend fashion
 - migration is favored over rewrite theater
 
@@ -309,6 +310,8 @@ This is an internal platform library. Its value is not novelty. Its value is red
   project overview and usage entry point
 - `docs/getting-started.md`
   first practical steps and composition patterns
+- `docs/socket-lifecycle.md`
+  authenticated bootstrap, reconnect, heartbeat, queue, ordering, and teardown contracts
 - `docs/api-reference.md`
   current public API summary
 - `docs/module-composition.md`

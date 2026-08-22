@@ -9,6 +9,7 @@
 - Add table, modal, and notification adapter slices surfaced by CRUD validation.
 - Validate additional module composition paths while keeping examples domain-neutral.
 - Use the dashboard utility ownership map to keep future adapter extraction small and testable.
+- Validate the production socket lifecycle contract across representative browser application adapters.
 
 ## Mid term
 

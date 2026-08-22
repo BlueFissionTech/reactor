@@ -822,4 +822,30 @@ Tracks browser activity and optional DOM counters.
 
 ### `createSocketClient(options)`
 
-Small WebSocket wrapper with send, close, and event callbacks.
+Creates a browser-edge WebSocket lifecycle client.
+
+Core options:
+
+- `url`, `protocols`, and optional `socketFactory`
+- `bootstrap(context)` for a per-attempt URL or subprotocol refresh
+- `queueBeforeOpen` for FIFO outbound queueing
+- `reconnect` for bounded retry, backoff, and retry filtering
+- `heartbeat` for ping/pong acknowledgement and timeout closure
+- `onOpen`, `onMessage`, `onError`, `onClose`, and `onStateChange`
+
+Methods:
+
+- `connect()`
+- `send(message)`
+- `close(code?, reason?, options?)`
+- `destroy(code?, reason?, options?)`
+- `getSocket()`
+- `getState()`
+- `getQueueSize()`
+- `isOpen()`
+
+### `SocketStates`
+
+Frozen lifecycle values for `idle`, `connecting`, `open`, `reconnecting`, `closing`, and `closed`.
+
+See `docs/socket-lifecycle.md` for authentication constraints, reconnect policy, heartbeat behavior, queue semantics, and the application-level ordering boundary.
