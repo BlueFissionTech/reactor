@@ -359,7 +359,7 @@ Reactor is available under the MIT License. See `LICENSE`.
 
 ## Current status
 
-Reactor is in its foundation phase.
+Reactor is in its incubating alpha foundation phase. The existing public `0.1.0` package remains immutable history; the alpha label describes current maturity and does not authorize another release. See `docs/releasing.md` for the evidence gaps and operator-gated prerelease proposal.
 
 It now has:
 
