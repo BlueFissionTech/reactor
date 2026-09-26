@@ -13,6 +13,31 @@ Reactor is a public MIT-licensed companion to DevElation and publishes under the
 - Package publishing requires two-factor authentication and disallows traditional access tokens.
 - Do not place npm credentials in the repository, workflow source, logs, or release notes.
 
+## Current release-governance record
+
+This record was reviewed against the repository and npm registry on 2026-09-24.
+
+- `@bluefission/reactor@0.1.0` and Git tag `v0.1.0` are legitimate, immutable public history. Preserve them; do not unpublish, overwrite, or retag that version.
+- A live npm metadata read returned `0.1.0`. The release workflow declares npm as the public registry and uses OIDC-backed provenance. The repository does not identify another package registry or mirror, so other exposure remains unverified rather than assumed absent.
+- Reactor remains at incubating alpha maturity while its reusable frontend surface and migration coverage are still growing. This maturity label does not rename the existing `0.1.0` artifact and does not authorize another publication.
+- No substantive closed-project consumer with a verified installed version is currently recorded. The documentation describes a legacy internal dashboard source as extraction and adoption context, but source context alone is not installation or compatibility evidence. A private owner check found one internal checkout that declares and commit-locks Reactor while its current source still imports local frontend modules; no installed Reactor package tree or package imports were observed, so it remains a candidate rather than a proven substantive consumer.
+
+Before another release is approved, close or explicitly accept these proof gaps:
+
+- capture exact installed versions and representative compatibility results for substantive closed-project consumers without publishing private project identities
+- verify the published artifact from a clean exact-version install, including its documented entry points
+- verify the npm provenance attestation and record any registry or mirror exposure
+- complete dependency security and bundled-license review in addition to the package's MIT license
+- define a rollback response for an immutable bad release, including deprecation, consumer notification, and a corrected successor version
+
+Closed-project identities and deployment details belong in controlled operational records. A release issue or PR should carry only the neutral compatibility evidence that reviewers need.
+
+## Proposed alpha lineage
+
+The proposed next version line is `0.2.0-alpha.1`. It gives future reviewed capability work an explicit semantic prerelease identity while preserving the existing `0.1.0` artifact. This is a proposal for operator review, not an approved version change.
+
+Do not edit `package.json`, create a tag or GitHub release, or write to a registry for this proposal until the operator approves the version line and a release PR supplies the missing consumer, provenance, security, licensing, clean-install, and rollback evidence.
+
 ## Registry ownership prerequisites
 
 An npm organization is distinct from the GitHub organization. Before attempting the first release:
@@ -81,8 +106,9 @@ The next versioned release should confirm the OIDC-only path before any other re
 
 ## Versioning
 
-- Patch releases fix compatible defects: `0.1.1`.
-- Minor releases add compatible public capabilities: `0.2.0`.
+- Prereleases use an explicit semantic suffix such as the proposed `0.2.0-alpha.1` and require operator approval before the version is adopted.
+- Patch releases fix compatible defects after the applicable release line is approved.
+- Minor releases add compatible public capabilities after prerelease evidence and review are complete.
 - Breaking changes require an intentional version boundary and migration notes.
 
 Update `package.json` and release notes in a reviewed PR before creating the matching GitHub release.
