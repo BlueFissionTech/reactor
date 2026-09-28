@@ -50,7 +50,7 @@ Reactor provides the shared frontend foundation for Blue Fission internal produc
 
 - Prefer npm package consumption.
 - Publish the package publicly under the `@bluefission` scope with MIT licensing, immutable versions, reviewed release tags, and provenance-backed automation.
-- Allow direct ESM inclusion for internal repos that are not yet package-driven.
+- Allow direct ESM inclusion for source-first consumers that are not yet package-driven.
 - Keep payload conventions compatible with Blue Fission APIs.
 - Avoid hard-coding one backend framework beyond the current Blue Fission response contract.
 

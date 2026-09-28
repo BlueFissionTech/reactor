@@ -2,7 +2,7 @@
 
 ## Who this is for
 
-This guide is for Blue Fission developers who want to start using Reactor inside an internal app, dashboard, or reusable module.
+This guide is for developers who want to use Reactor in a Blue Fission application, compatible browser project, dashboard, or reusable module.
 
 ## Start with the right expectation
 
