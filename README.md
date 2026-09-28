@@ -30,14 +30,7 @@ The point is to centralize the stable patterns first, then modernize the rest fr
 
 ## Why this repository exists
 
-Right now, Blue Fission frontend behavior is split across several places:
-
-- reusable utility code in existing internal frontend modules
-- app-level modules in `framework/resource/src/js/modules/app`
-- dashboard behavior in `framework/resource/src/js/modules/dashboard-ui`
-- project-specific copies and forks
-
-Those codebases share the same ideas:
+Blue Fission frontend behavior has historically been split across shared utilities, application modules, dashboard code, and project-specific copies. Those codebases repeat the same ideas:
 
 - CRUD API wrappers
 - response parsing
@@ -48,26 +41,17 @@ Those codebases share the same ideas:
 
 They just do it inconsistently. Reactor is the consolidation layer for those ideas.
 
-## Current documentation quality
+## Documentation
 
-At the moment, Reactor is reasonably documented for architecture and intent, but still early in operational guidance.
-
-It already has:
+Reactor's documentation covers:
 
 - a library-level overview in this file
 - scope and acceptance criteria in `SPEC.md`
 - a system view in `ARCHITECTURE.md`
 - a roadmap in `ROADMAP.md`
-- migration notes for legacy module composition
-
-It was missing:
-
-- a better explanation of how the pieces fit together
-- a clear quick-start path
-- a public API reference
-- a stronger voice about what the library is trying to become
-
-This README and the supporting docs are meant to close that gap.
+- setup and composition guidance under `docs/`
+- a public API reference and focused migration notes
+- contribution and security policies
 
 ## The Reactor mental model
 
@@ -116,8 +100,14 @@ The current public surface is:
   `createPanelRegistry`
 - `src/ui/dashboard-shell.js`
   `createDashboardShell`, `normalizeRoute`
+- `src/ui/dialogs.js`
+  `DialogStates`, `normalizeDialogRequest`, `createModalController`, `createConfirmationController`
+- `src/ui/table-list.js`
+  `normalizeTableQuery`, `createTableListAdapter`
 - `src/ui/forms.js`
   `FormStatus`, `createFormController`, `serializeFormInput`, `normalizeFormErrors`
+- `src/ui/notifications.js`
+  `NotificationTypes`, `normalizeNotification`, `createNotificationAdapter`
 - `src/ui/surface-contract.js`
   `SurfaceFamilies`, `SurfaceUpdateSources`, `createSurfaceContract`, `createSurfaceManifest`, `createSurfacePulse`
 - `src/ui/portlet.js`
@@ -137,7 +127,7 @@ The current public surface is:
 
 ## Quick start
 
-The package manifest is fixed at `0.1.0`. Once that version is available from the configured npm registry, consume it with an exact constraint:
+Install the current public release with an exact constraint:
 
 ```bash
 npm install --save-exact @bluefission/reactor@0.1.0
@@ -171,7 +161,7 @@ app.resources.user.read(1).then((response) => {
 });
 ```
 
-For direct browser usage inside internal repos, ESM imports also work:
+For direct browser usage, ESM imports from a checked-out copy also work:
 
 ```html
 <script type="module">
@@ -278,7 +268,7 @@ Relevant files:
 
 ## Legacy script coverage
 
-I also checked older shared script patterns and pulled reusable concepts into Reactor:
+Reactor also represents reusable concepts from older shared script patterns:
 
 - `framework.js`
   now represented by `src/dom/framework.js`
@@ -314,6 +304,8 @@ Reactor is available under the MIT License. See `LICENSE`.
 
 - `README.md`
   project overview and usage entry point
+- `CONTRIBUTING.md`
+  repository scope, setup, branch, test, and review expectations
 - `docs/getting-started.md`
   first practical steps and composition patterns
 - `docs/socket-lifecycle.md`
@@ -372,12 +364,6 @@ It now has:
 - a lightweight signal and DOM binding model
 - an extracted CRUD panel adapter
 - dashboard shell, form helper, surface contract, and CRUD adapter coverage
-- baseline automated tests for response normalization, service gateways, evented objects, and Blue Fission API bootstrap
+- automated coverage across the public transport, state, service, UI adapter, socket, HTML, primitive, and release surfaces
 
-It still needs:
-
-- broader automated coverage for DOM helpers, templates, record sets, and UI adapters
-- reusable table, modal, and notification adapter slices
-- method-level dashboard interop mapping for the remaining legacy utility surface
-
-Those items are intentionally tracked as follow-up work rather than hidden as vague future intent.
+The roadmap tracks remaining validation, migration, and renderer work. New capabilities should stay framework-agnostic and earn a place in Reactor through repeated, reusable frontend needs.

@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Security fixes are applied to the latest published minor release. Before the first npm publication, report findings against the current `main` branch.
+Security fixes are applied to the latest supported published release and the current `main` branch.
 
 ## Reporting a vulnerability
 

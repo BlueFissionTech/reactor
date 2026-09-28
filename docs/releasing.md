@@ -20,7 +20,7 @@ This record was reviewed against the repository and npm registry on 2026-09-24.
 - `@bluefission/reactor@0.1.0` and Git tag `v0.1.0` are legitimate, immutable public history. Preserve them; do not unpublish, overwrite, or retag that version.
 - A live npm metadata read returned `0.1.0`. The release workflow declares npm as the public registry and uses OIDC-backed provenance. The repository does not identify another package registry or mirror, so other exposure remains unverified rather than assumed absent.
 - Reactor remains at incubating alpha maturity while its reusable frontend surface and migration coverage are still growing. This maturity label does not rename the existing `0.1.0` artifact and does not authorize another publication.
-- No substantive closed-project consumer with a verified installed version is currently recorded. The documentation describes a legacy internal dashboard source as extraction and adoption context, but source context alone is not installation or compatibility evidence. A private owner check found one internal checkout that declares and commit-locks Reactor while its current source still imports local frontend modules; no installed Reactor package tree or package imports were observed, so it remains a candidate rather than a proven substantive consumer.
+- No substantive consumer compatibility evidence with a verified installed version is currently recorded. Dependency declarations and source context alone do not establish installation or compatibility.
 
 Before another release is approved, close or explicitly accept these proof gaps:
 

@@ -156,14 +156,12 @@ Reactor keeps compatibility available through adapters, but the architectural ta
 
 ## Future layers
 
-- dashboard shell and router helpers
-- template adapters for current markup conventions
-- data table and form adapters
-- BlueCore-specific higher-level components
+- stronger validation and integration coverage for the existing dashboard, table/list, dialog, notification, template, and form adapters
+- optional higher-level adapters for stable BlueCore-generated frontend contracts
 - optional modern renderer integrations
 
 ## Extracted legacy pattern
 
 One extracted legacy pattern is the common CRUD admin panel flow. Historically this logic was rewritten across project-local modules. Reactor now provides a reusable adapter for that shape so projects can standardize around one implementation while keeping the current UI stack.
 
-`dashboard-ui` itself is only partially represented so far. Reactor currently exposes the jQuery-facing bridge surface that supports parts of that world, but it does not yet contain a full dashboard shell adapter for navigation, tab management, prompts, session timeout behavior, or rich screen orchestration. That boundary should stay explicit in the docs so consumers know what is extracted already versus what remains legacy.
+Reactor now includes a dashboard shell adapter for panel activation, route and menu state, notices, and dialog handoffs. Feature-specific navigation policy, session timeout behavior, and rich screen orchestration remain host responsibilities. That boundary keeps the shared adapter reusable while allowing applications to compose their own product behavior.
