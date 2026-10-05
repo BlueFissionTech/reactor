@@ -581,6 +581,22 @@ Family constants for `media`, `dialogue`, `scene`, `overlay`, `panel`, `notifica
 
 Update source constants for `scripted`, `reactive`, and `system`.
 
+### `createCommandWorkItem(definition?)`
+
+Creates a serializable `reactor.command-work-item/1` descriptor for command identity, schema references, actor/tenant/delegation display references, correlation and idempotency metadata, host-supplied authorization preview and controls, progress, and explanations.
+
+Controls default to unavailable. The descriptor does not authorize or execute commands.
+
+### `createCommandReceipt(definition?)`
+
+Creates a serializable `reactor.command-receipt/1` descriptor for terminal or recoverable state, outcome, output, errors, diagnostics, evidence references, cancellation, recovery, and readback.
+
+### Command constants
+
+- `CommandWorkItemStates` provides queue, approval, running, cancellation, terminal, and recoverable states.
+- `CommandAuthorizationDecisions` provides unknown, allowed, denied, awaiting-approval, and stale decisions.
+- `CommandReceiptOutcomes` provides unknown, success, denial, duplicate, stale-approval, crash, budget-exhaustion, cancellation, and recoverable outcomes.
+
 ### `createPortletController(options?)`
 
 Portlet helper inspired by `portlet-ui.js`.

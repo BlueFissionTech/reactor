@@ -120,6 +120,8 @@ The current public surface is:
   `FormStatus`, `createFormController`, `serializeFormInput`, `normalizeFormErrors`
 - `src/ui/surface-contract.js`
   `SurfaceFamilies`, `SurfaceUpdateSources`, `createSurfaceContract`, `createSurfaceManifest`, `createSurfacePulse`
+- `src/ui/command-surface.js`
+  `CommandWorkItemStates`, `CommandAuthorizationDecisions`, `CommandReceiptOutcomes`, `createCommandWorkItem`, `createCommandReceipt`
 - `src/ui/portlet.js`
   `createPortletController`
 - `src/html/helpers.js`
@@ -330,6 +332,8 @@ Reactor is available under the MIT License. See `LICENSE`.
   reusable frontend binding contract shape and ownership boundaries
 - `docs/surface-contracts.md`
   reusable rich-surface component, state, event, and pulse contract shape
+- `docs/command-surfaces.md`
+  review-aware command work-item, control, progress, outcome, and receipt contracts
 - `docs/dialog-flows.md`
   modal and confirmation request/result contracts
 - `docs/table-list-adapters.md`
