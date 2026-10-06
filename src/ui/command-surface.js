@@ -38,7 +38,9 @@ export function createCommandWorkItem(definition = {}) {
   const item = {
     contractVersion: source.contractVersion || COMMAND_WORK_ITEM_CONTRACT,
     commandId: String(source.commandId || ""),
+    commandVersion: String(source.commandVersion || ""),
     workItemId: String(source.workItemId || ""),
+    implementationRefs: normalizeStringList(source.implementationRefs),
     label: String(source.label || ""),
     description: String(source.description || ""),
     state: normalizeValue(source.state, Object.values(CommandWorkItemStates), CommandWorkItemStates.QUEUED),
@@ -48,16 +50,19 @@ export function createCommandWorkItem(definition = {}) {
     },
     subject: {
       actor: normalizeReference(source.subject?.actor || source.actor),
+      principal: normalizeReference(source.subject?.principal || source.principal),
       tenant: normalizeReference(source.subject?.tenant || source.tenant),
       delegation: normalizeReference(source.subject?.delegation || source.delegation)
     },
     correlationId: String(source.correlationId || ""),
+    causationId: String(source.causationId || ""),
     inputDigest: String(source.inputDigest || ""),
     idempotencyKey: String(source.idempotencyKey || ""),
     authorization: normalizeAuthorization(source.authorization),
     controls: normalizeControls(source.controls),
     progress: normalizeProgress(source.progress),
     explanation: normalizeExplanation(source.explanation),
+    upstream: normalizeUpstreamReference(source.upstream),
     meta: cloneObject(source.meta)
   };
 
@@ -69,16 +74,26 @@ export function createCommandReceipt(definition = {}) {
   const receipt = {
     contractVersion: source.contractVersion || COMMAND_RECEIPT_CONTRACT,
     commandId: String(source.commandId || ""),
+    commandVersion: String(source.commandVersion || ""),
     workItemId: String(source.workItemId || ""),
+    receiptId: String(source.receiptId || ""),
     state: normalizeValue(source.state, terminalStates(), CommandWorkItemStates.FAILED),
     outcome: normalizeValue(source.outcome, Object.values(CommandReceiptOutcomes), CommandReceiptOutcomes.UNKNOWN),
     correlationId: String(source.correlationId || ""),
+    causationId: String(source.causationId || ""),
+    approvalRef: String(source.approvalRef || ""),
     inputDigest: String(source.inputDigest || ""),
     idempotencyKey: String(source.idempotencyKey || ""),
     output: cloneValue(source.output ?? null),
     error: normalizeError(source.error),
     diagnostics: normalizeList(source.diagnostics),
     evidenceRefs: normalizeStringList(source.evidenceRefs || source.evidence_refs),
+    resultRefs: normalizeStringList(source.resultRefs || source.result_refs),
+    outputCounts: normalizeCounts(source.outputCounts || source.output_counts),
+    reasonCodes: normalizeStringList(source.reasonCodes || source.reason_codes),
+    provenanceRefs: normalizeStringList(source.provenanceRefs || source.provenance_refs),
+    resourceUsage: normalizeList(source.resourceUsage || source.resource_usage),
+    cost: source.cost ? cloneObject(source.cost) : null,
     cancellation: {
       requested: Boolean(source.cancellation?.requested),
       accepted: Boolean(source.cancellation?.accepted),
@@ -91,6 +106,7 @@ export function createCommandReceipt(definition = {}) {
     },
     terminalAt: String(source.terminalAt || ""),
     readback: normalizeExplanation(source.readback),
+    upstream: normalizeUpstreamReference(source.upstream),
     meta: cloneObject(source.meta)
   };
 
@@ -104,8 +120,13 @@ function normalizeAuthorization(value = {}) {
     decision: normalizeValue(source.decision, Object.values(CommandAuthorizationDecisions), CommandAuthorizationDecisions.UNKNOWN),
     reason: String(source.reason || ""),
     scope: normalizeStringList(source.scope),
-    approvalId: String(source.approvalId || ""),
-    expiresAt: String(source.expiresAt || "")
+    approvalId: String(source.approvalId || source.approvalRef || ""),
+    expiresAt: String(source.expiresAt || ""),
+    decidedAt: String(source.decidedAt || ""),
+    revocationCheckedAt: String(source.revocationCheckedAt || ""),
+    revocationStatus: String(source.revocationStatus || ""),
+    policyRefs: normalizeStringList(source.policyRefs),
+    reasonCodes: normalizeStringList(source.reasonCodes)
   };
 }
 
@@ -140,9 +161,11 @@ function normalizeSchemaReference(value = {}) {
   const source = typeof value === "string" ? { id: value } : asObject(value);
 
   return {
-    id: String(source.id || ""),
+    id: String(source.id || source.schemaRef || ""),
+    name: String(source.name || ""),
     version: String(source.version || ""),
-    mediaType: String(source.mediaType || "application/schema+json")
+    mediaType: String(source.mediaType || "application/schema+json"),
+    cardinality: String(source.cardinality || "")
   };
 }
 
@@ -162,8 +185,33 @@ function normalizeExplanation(value = {}) {
   return {
     code: String(source.code || ""),
     summary: String(source.summary || ""),
-    details: normalizeStringList(source.details)
+    details: normalizeStringList(source.details),
+    statusRef: String(source.statusRef || ""),
+    visibility: String(source.visibility || ""),
+    updatedAt: String(source.updatedAt || "")
   };
+}
+
+function normalizeUpstreamReference(value = {}) {
+  const source = asObject(value);
+
+  return {
+    schemaId: String(source.schemaId || ""),
+    schemaVersion: String(source.schemaVersion || ""),
+    contractRef: String(source.contractRef || ""),
+    invocationId: String(source.invocationId || ""),
+    receiptId: String(source.receiptId || ""),
+    verified: Boolean(source.verified)
+  };
+}
+
+function normalizeCounts(value = {}) {
+  const source = asObject(value);
+
+  return Object.fromEntries(Object.entries(source).map(([name, count]) => [
+    name,
+    Math.max(0, Math.trunc(finiteNumber(count, 0)))
+  ]));
 }
 
 function normalizeError(value) {

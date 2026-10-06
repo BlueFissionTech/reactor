@@ -8,13 +8,14 @@ import {
 
 const workItem = createCommandWorkItem({
   commandId: "resource.update",
+  commandVersion: "1",
   workItemId: "work-12",
   label: "Update resource",
   description: "Apply reviewed changes to a resource.",
   state: CommandWorkItemStates.AWAITING_APPROVAL,
   schemas: {
-    input: { id: "resource.update.input", version: "1" },
-    output: { id: "resource.update.output", version: "1" }
+    input: { name: "request", id: "resource.update.input", version: "1", cardinality: "one" },
+    output: { name: "resource", id: "resource.update.output", version: "1", cardinality: "one" }
   },
   correlationId: "correlation-7",
   inputDigest: "sha256:input",
@@ -30,6 +31,7 @@ const workItem = createCommandWorkItem({
 
 const receipt = createCommandReceipt({
   commandId: workItem.commandId,
+  commandVersion: workItem.commandVersion,
   workItemId: workItem.workItemId,
   state: CommandWorkItemStates.SUCCEEDED,
   outcome: CommandReceiptOutcomes.SUCCEEDED,

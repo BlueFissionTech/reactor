@@ -11,6 +11,8 @@ Reactor defines two versioned contracts:
 
 Use `createCommandWorkItem(...)` to normalize host-supplied data. Work items carry stable command and instance identifiers, input and output schema references, actor/tenant/delegation display references, correlation and input digest values, an idempotency key, authorization preview, explicit controls, progress, and explanations.
 
+Keep `commandId` and `commandVersion` stable across surfaces. Provider bindings belong in `implementationRefs`; they must not replace the shared command identity. Each schema reference can carry `name` and explicit `cardinality` (`zero_or_one`, `one`, `zero_or_more`, or `one_or_more`). An empty cardinality is unknown and must not be presented as a successful compatibility claim.
+
 Actor, tenant, and delegation fields are presentation references. They should contain identifiers and safe display text rather than credentials or authoritative policy objects.
 
 Controls default to unavailable. A browser or renderer must not infer privileges from a command state, visible button, actor label, or approval identifier. The host supplies the authorization decision and every available control.
@@ -20,6 +22,20 @@ Controls default to unavailable. A browser or renderer must not infer privileges
 Use `createCommandReceipt(...)` for the host's terminal readback. Receipts carry explicit state and outcome values plus optional output, error, diagnostics, evidence references, cancellation data, and recovery data.
 
 The outcome vocabulary covers successful execution, denial, duplicate detection, stale approval, worker crash, budget exhaustion, cancellation, and recoverable interruption. It describes what the host reported; Reactor does not retry or recover a command.
+
+## Provisional upstream mapping
+
+The `upstream` block records a source schema reference for presentation and traceability. It defaults to `verified: false`; a schema name or version does not prove signature validity, admission, authorization, or compatibility.
+
+Annex issue [#29](https://github.com/BlueFissionTech/annex/issues/29) and draft PR [#30](https://github.com/BlueFissionTech/annex/pull/30) propose these exact schemas:
+
+- `annex.command_contract` `0.2.0`: `command_id`/`command_version` map to `commandId`/`commandVersion`; provider-local `implementation_refs` map to `implementationRefs`; channel `schema_ref`, `name`, and `cardinality` map to Reactor schema references.
+- `annex.command_invocation` `0.2.0`: `invocation_id`, `contract_ref`, `correlation_id`, `causation_id`, `input.digest`, `idempotency_key`, authority display references, and approval evidence map to the corresponding work-item fields.
+- `annex.command_receipt` `0.2.0`: `receipt_id`, `invocation_id`, state, lineage, result and provenance references, output counts, reason codes, resource/cost evidence, recovery, and readback map to receipt presentation fields.
+
+That Annex proposal is unsigned review material until its owner accepts and lands it. Reactor does not copy signatures or treat `upstream.verified` as an authorization decision.
+
+The existing `synematic.chat.command` `1.0.0` mapping is provisional and limited to chat adapter lifecycle fields: command/arguments/result, correlation/causation, idempotency, and received/completed/failed/retry-requested state. [Synematic #65](https://github.com/BlueFissionTech/synematic/issues/65) owns the portable denial, cancellation/recovery, approval freshness, output-cardinality, durable-receipt, cost, and host-authorization contract. Reactor therefore makes no cross-surface Synematic compatibility claim.
 
 ## Accessibility
 
