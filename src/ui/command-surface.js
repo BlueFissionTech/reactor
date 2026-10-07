@@ -10,7 +10,8 @@ export const CommandWorkItemStates = Object.freeze({
   CANCELLED: "cancelled",
   SUCCEEDED: "succeeded",
   FAILED: "failed",
-  RECOVERABLE: "recoverable"
+  RECOVERABLE: "recoverable",
+  EFFECT_UNKNOWN: "effect_unknown"
 });
 
 export const CommandAuthorizationDecisions = Object.freeze({
@@ -30,7 +31,8 @@ export const CommandReceiptOutcomes = Object.freeze({
   CRASHED: "crashed",
   BUDGET_EXHAUSTED: "budget_exhausted",
   CANCELLED: "cancelled",
-  RECOVERABLE: "recoverable"
+  RECOVERABLE: "recoverable",
+  EFFECT_UNKNOWN: "effect_unknown"
 });
 
 export function createCommandWorkItem(definition = {}) {
@@ -52,13 +54,20 @@ export function createCommandWorkItem(definition = {}) {
       actor: normalizeReference(source.subject?.actor || source.actor),
       principal: normalizeReference(source.subject?.principal || source.principal),
       tenant: normalizeReference(source.subject?.tenant || source.tenant),
-      delegation: normalizeReference(source.subject?.delegation || source.delegation)
+      delegation: normalizeReference(source.subject?.delegation || source.delegation),
+      authorityMode: String(source.subject?.authorityMode || source.subject?.authority_mode || source.authorityMode || source.authority_mode || "")
     },
     correlationId: String(source.correlationId || ""),
     causationId: String(source.causationId || ""),
     inputDigest: String(source.inputDigest || ""),
+    inputPayloadRef: String(source.inputPayloadRef || source.input_payload_ref || ""),
     idempotencyKey: String(source.idempotencyKey || ""),
+    duplicateOf: String(source.duplicateOf || source.duplicate_of || ""),
+    deduplication: normalizeDeduplication(source.deduplication),
+    requestedAt: String(source.requestedAt || source.requested_at || ""),
+    deadlineAt: String(source.deadlineAt || source.deadline_at || ""),
     authorization: normalizeAuthorization(source.authorization),
+    cancellation: normalizeCancellationRequest(source.cancellation),
     controls: normalizeControls(source.controls),
     progress: normalizeProgress(source.progress),
     explanation: normalizeExplanation(source.explanation),
@@ -82,6 +91,13 @@ export function createCommandReceipt(definition = {}) {
     correlationId: String(source.correlationId || ""),
     causationId: String(source.causationId || ""),
     approvalRef: String(source.approvalRef || ""),
+    authorityCheck: normalizeAuthorityCheck(source.authorityCheck || source.authority_check),
+    effectStatus: normalizeValue(
+      source.effectStatus || source.effect_status,
+      ["not_started", "in_progress", "applied", "not_applied", "partial", "unknown"],
+      "unknown"
+    ),
+    observedAt: String(source.observedAt || source.terminalAt || ""),
     inputDigest: String(source.inputDigest || ""),
     idempotencyKey: String(source.idempotencyKey || ""),
     output: cloneValue(source.output ?? null),
@@ -90,6 +106,8 @@ export function createCommandReceipt(definition = {}) {
     evidenceRefs: normalizeStringList(source.evidenceRefs || source.evidence_refs),
     resultRefs: normalizeStringList(source.resultRefs || source.result_refs),
     outputCounts: normalizeCounts(source.outputCounts || source.output_counts),
+    errorRef: String(source.errorRef || source.error_ref || ""),
+    outcomeSummary: String(source.outcomeSummary || source.outcome_summary || ""),
     reasonCodes: normalizeStringList(source.reasonCodes || source.reason_codes),
     provenanceRefs: normalizeStringList(source.provenanceRefs || source.provenance_refs),
     resourceUsage: normalizeList(source.resourceUsage || source.resource_usage),
@@ -99,11 +117,7 @@ export function createCommandReceipt(definition = {}) {
       accepted: Boolean(source.cancellation?.accepted),
       reason: String(source.cancellation?.reason || "")
     },
-    recovery: {
-      available: Boolean(source.recovery?.available),
-      reference: String(source.recovery?.reference || ""),
-      reason: String(source.recovery?.reason || "")
-    },
+    recovery: normalizeRecovery(source.recovery),
     terminalAt: String(source.terminalAt || ""),
     readback: normalizeExplanation(source.readback),
     upstream: normalizeUpstreamReference(source.upstream),
@@ -127,6 +141,55 @@ function normalizeAuthorization(value = {}) {
     revocationStatus: String(source.revocationStatus || ""),
     policyRefs: normalizeStringList(source.policyRefs),
     reasonCodes: normalizeStringList(source.reasonCodes)
+  };
+}
+
+function normalizeDeduplication(value = {}) {
+  const source = asObject(value);
+
+  return {
+    originalInvocationId: String(source.originalInvocationId || source.original_invocation_id || ""),
+    originalTenantId: String(source.originalTenantId || source.original_tenant_id || ""),
+    originalCommandId: String(source.originalCommandId || source.original_command_id || ""),
+    originalCommandVersion: String(source.originalCommandVersion || source.original_command_version || ""),
+    originalInputDigest: String(source.originalInputDigest || source.original_input_digest || ""),
+    disposition: normalizeValue(source.disposition, ["reuse", "reject_conflict"], "")
+  };
+}
+
+function normalizeCancellationRequest(value = {}) {
+  const source = asObject(value);
+
+  return {
+    requestedAt: String(source.requestedAt || source.requested_at || ""),
+    requestedBy: String(source.requestedBy || source.requested_by || ""),
+    reasonCode: String(source.reasonCode || source.reason_code || "")
+  };
+}
+
+function normalizeAuthorityCheck(value = {}) {
+  const source = asObject(value);
+
+  return {
+    tenantId: String(source.tenantId || source.tenant_id || ""),
+    status: normalizeValue(source.status, ["not_required", "current", "expired", "revoked", "unknown"], "unknown"),
+    checkedAt: String(source.checkedAt || source.checked_at || ""),
+    approvalRef: String(source.approvalRef || source.approval_ref || ""),
+    reasonCodes: normalizeStringList(source.reasonCodes || source.reason_codes)
+  };
+}
+
+function normalizeRecovery(value = {}) {
+  const source = asObject(value);
+  const checkpointRef = String(source.checkpointRef || source.checkpoint_ref || source.reference || "");
+
+  return {
+    available: Boolean(source.available),
+    reference: checkpointRef,
+    reason: String(source.reason || ""),
+    mode: normalizeValue(source.mode, ["retry", "resume", "compensate"], ""),
+    checkpointRef,
+    retryAfter: String(source.retryAfter || source.retry_after || "")
   };
 }
 
@@ -246,7 +309,8 @@ function terminalStates() {
     CommandWorkItemStates.CANCELLED,
     CommandWorkItemStates.SUCCEEDED,
     CommandWorkItemStates.FAILED,
-    CommandWorkItemStates.RECOVERABLE
+    CommandWorkItemStates.RECOVERABLE,
+    CommandWorkItemStates.EFFECT_UNKNOWN
   ];
 }
 

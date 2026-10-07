@@ -9,7 +9,7 @@ Reactor defines two versioned contracts:
 
 ## Work items
 
-Use `createCommandWorkItem(...)` to normalize host-supplied data. Work items carry stable command and instance identifiers, input and output schema references, actor/tenant/delegation display references, correlation and input digest values, an idempotency key, authorization preview, explicit controls, progress, and explanations.
+Use `createCommandWorkItem(...)` to normalize host-supplied data. Work items carry stable command and instance identifiers, input and output schema references, actor/tenant/delegation display references, correlation and input digest values, an idempotency key, duplicate-comparison evidence, authorization preview, explicit controls, progress, and explanations.
 
 Keep `commandId` and `commandVersion` stable across surfaces. Provider bindings belong in `implementationRefs`; they must not replace the shared command identity. Each schema reference can carry `name` and explicit `cardinality` (`zero_or_one`, `one`, `zero_or_more`, or `one_or_more`). An empty cardinality is unknown and must not be presented as a successful compatibility claim.
 
@@ -21,7 +21,7 @@ Controls default to unavailable. A browser or renderer must not infer privileges
 
 Use `createCommandReceipt(...)` for the host's terminal readback. Receipts carry explicit state and outcome values plus optional output, error, diagnostics, evidence references, cancellation data, and recovery data.
 
-The outcome vocabulary covers successful execution, denial, duplicate detection, stale approval, worker crash, budget exhaustion, cancellation, and recoverable interruption. It describes what the host reported; Reactor does not retry or recover a command.
+The outcome vocabulary covers successful execution, denial, duplicate detection, stale approval, worker crash, budget exhaustion, cancellation, recoverable interruption, and an effect whose result cannot be proven. `effect_unknown` remains distinct from success, failure, and safe retry. Missing cost evidence is represented by `null` and never normalized to zero. Reactor describes what the host reported; it does not retry or recover a command.
 
 ## Provisional upstream mapping
 
@@ -30,10 +30,10 @@ The `upstream` block records a source schema reference for presentation and trac
 Annex issue [#29](https://github.com/BlueFissionTech/annex/issues/29) and draft PR [#30](https://github.com/BlueFissionTech/annex/pull/30) propose these exact schemas:
 
 - `annex.command_contract` `0.2.0`: `command_id`/`command_version` map to `commandId`/`commandVersion`; provider-local `implementation_refs` map to `implementationRefs`; channel `schema_ref`, `name`, and `cardinality` map to Reactor schema references.
-- `annex.command_invocation` `0.2.0`: `invocation_id`, `contract_ref`, `correlation_id`, `causation_id`, `input.digest`, `idempotency_key`, authority display references, and approval evidence map to the corresponding work-item fields.
-- `annex.command_receipt` `0.2.0`: `receipt_id`, `invocation_id`, state, lineage, result and provenance references, output counts, reason codes, resource/cost evidence, recovery, and readback map to receipt presentation fields.
+- `annex.command_invocation` `0.2.0`: `invocation_id`, `contract_ref`, `correlation_id`, `causation_id`, `input.digest`, `input.payload_ref`, `idempotency_key`, authority display references, approval evidence, and cancellation requests map to the corresponding work-item fields. A `duplicate_of` projection must retain the complete tenant, command ID/version, and input-digest comparison plus its reuse-or-conflict disposition; Reactor does not infer this evidence.
+- `annex.command_receipt` `0.2.0`: `receipt_id`, `invocation_id`, state, lineage, authority recheck, `effect_status`, result and provenance references, output counts, reason codes, resource/cost evidence, recovery, and readback map to receipt presentation fields. `recovery_required` needs a declared mode and checkpoint, and `effect_unknown` stays unknown with explicit reason evidence.
 
-That Annex proposal is unsigned review material until its owner accepts and lands it. Reactor does not copy signatures or treat `upstream.verified` as an authorization decision.
+That Annex proposal is unsigned review material until its owner accepts and lands it. Reactor does not copy signatures or treat `upstream.verified` as an authorization decision. Missing required Annex fields block a compatibility claim; projection never proves admission or execution authority.
 
 The existing `synematic.chat.command` `1.0.0` mapping is provisional and limited to chat adapter lifecycle fields: command/arguments/result, correlation/causation, idempotency, and received/completed/failed/retry-requested state. [Synematic #65](https://github.com/BlueFissionTech/synematic/issues/65) owns the portable denial, cancellation/recovery, approval freshness, output-cardinality, durable-receipt, cost, and host-authorization contract. Reactor therefore makes no cross-surface Synematic compatibility claim.
 

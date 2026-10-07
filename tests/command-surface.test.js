@@ -31,7 +31,19 @@ test("command work items preserve stable identity, schema, authorization, and co
     correlationId: "correlation-7",
     causationId: "causation-6",
     inputDigest: "sha256:input",
+    inputPayloadRef: "payload:resource-5:update",
     idempotencyKey: "resource-5:update:7",
+    duplicateOf: "invocation-9",
+    deduplication: {
+      original_invocation_id: "invocation-9",
+      original_tenant_id: "tenant-2",
+      original_command_id: "resource.update",
+      original_command_version: "1",
+      original_input_digest: "sha256:input",
+      disposition: "reuse"
+    },
+    requestedAt: "2030-01-01T00:00:00Z",
+    deadlineAt: "2030-01-01T00:05:00Z",
     authorization: {
       decision: CommandAuthorizationDecisions.AWAITING_APPROVAL,
       scope: "resource:write",
@@ -60,6 +72,8 @@ test("command work items preserve stable identity, schema, authorization, and co
   assert.equal(item.schemas.output.cardinality, "one");
   assert.equal(item.subject.actor.type, "human");
   assert.equal(item.subject.principal.id, "principal-4");
+  assert.equal(item.deduplication.originalTenantId, "tenant-2");
+  assert.equal(item.deduplication.disposition, "reuse");
   assert.deepEqual(item.authorization.scope, ["resource:write"]);
   assert.equal(item.controls.approve.available, true);
   assert.equal(item.controls.retry.available, false);
@@ -75,6 +89,7 @@ test("command work items never infer authority or controls", () => {
   assert.equal(item.controls.approve.available, false);
   assert.equal(item.controls.cancel.available, false);
   assert.equal(item.state, CommandWorkItemStates.QUEUED);
+  assert.equal(item.deduplication.disposition, "");
 });
 
 test("command work items present host-supplied allowed decisions", () => {
@@ -135,6 +150,14 @@ test("command receipts retain cancellation, recovery, diagnostics, and evidence"
     outcome: CommandReceiptOutcomes.CRASHED,
     causationId: "causation-6",
     approvalRef: "approval-3",
+    authority_check: {
+      tenant_id: "tenant-2",
+      status: "current",
+      checked_at: "2030-01-01T00:00:30Z",
+      approval_ref: "approval-3"
+    },
+    effectStatus: "partial",
+    observedAt: "2030-01-01T00:01:00Z",
     error: { code: "worker_crashed", message: "The command worker exited.", retryable: true, details: { exitCode: 1 } },
     diagnostics: [{ severity: "error", message: "Worker exited" }],
     evidenceRefs: ["log:command-12"],
@@ -145,7 +168,12 @@ test("command receipts retain cancellation, recovery, diagnostics, and evidence"
     resourceUsage: [{ metric: "runtime", value: 12, unit: "seconds" }],
     cost: { amount: 0, currency: "USD", basis: "observed" },
     cancellation: { requested: true, accepted: false, reason: "Worker unavailable." },
-    recovery: { available: true, reference: "recovery-12", reason: "Checkpoint available." },
+    recovery: {
+      available: true,
+      mode: "resume",
+      checkpoint_ref: "recovery-12",
+      reason: "Checkpoint available."
+    },
     readback: {
       summary: "Recovery is available.",
       statusRef: "status:command-12",
@@ -165,9 +193,34 @@ test("command receipts retain cancellation, recovery, diagnostics, and evidence"
   assert.deepEqual(receipt.evidenceRefs, ["log:command-12"]);
   assert.equal(receipt.cancellation.requested, true);
   assert.equal(receipt.recovery.reference, "recovery-12");
+  assert.equal(receipt.recovery.mode, "resume");
+  assert.equal(receipt.authorityCheck.status, "current");
+  assert.equal(receipt.effectStatus, "partial");
   assert.equal(receipt.outputCounts.resource, 1);
   assert.equal(receipt.readback.statusRef, "status:command-12");
   assert.equal(receipt.upstream.schemaVersion, "0.2.0");
+});
+
+test("command receipts preserve unknown effects without translating them to failure or retry", () => {
+  const receipt = createCommandReceipt({
+    commandId: "resource.update",
+    commandVersion: "1",
+    workItemId: "work-13",
+    receiptId: "receipt-13",
+    state: CommandWorkItemStates.EFFECT_UNKNOWN,
+    outcome: CommandReceiptOutcomes.EFFECT_UNKNOWN,
+    effectStatus: "unknown",
+    outcomeSummary: "The host cannot prove whether the effect was applied.",
+    reasonCodes: ["worker_disconnected_after_dispatch"],
+    authorityCheck: { status: "unknown" }
+  });
+
+  assert.equal(receipt.state, CommandWorkItemStates.EFFECT_UNKNOWN);
+  assert.equal(receipt.outcome, CommandReceiptOutcomes.EFFECT_UNKNOWN);
+  assert.equal(receipt.effectStatus, "unknown");
+  assert.equal(receipt.authorityCheck.status, "unknown");
+  assert.equal(receipt.recovery.available, false);
+  assert.equal(receipt.cost, null);
 });
 
 test("command descriptors return immutable snapshots", () => {

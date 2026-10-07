@@ -19,7 +19,10 @@ const workItem = createCommandWorkItem({
   },
   correlationId: "correlation-7",
   inputDigest: "sha256:input",
+  inputPayloadRef: "payload:resource-5:update",
   idempotencyKey: "resource-5:update:7",
+  requestedAt: "2030-01-01T00:00:00Z",
+  deadlineAt: "2030-01-01T00:05:00Z",
   authorization: {
     decision: CommandAuthorizationDecisions.AWAITING_APPROVAL,
     scope: ["resource:write"],
@@ -35,10 +38,18 @@ const receipt = createCommandReceipt({
   workItemId: workItem.workItemId,
   state: CommandWorkItemStates.SUCCEEDED,
   outcome: CommandReceiptOutcomes.SUCCEEDED,
+  effectStatus: "applied",
+  observedAt: "2030-01-01T00:01:00Z",
+  authorityCheck: {
+    tenantId: "tenant-2",
+    status: "current",
+    checkedAt: "2030-01-01T00:00:30Z"
+  },
   correlationId: workItem.correlationId,
   inputDigest: workItem.inputDigest,
   idempotencyKey: workItem.idempotencyKey,
   output: { id: "resource-5", updated: true },
+  outcomeSummary: "The reviewed update completed.",
   terminalAt: "2030-01-01T00:01:00Z",
   readback: "The reviewed update completed."
 });
