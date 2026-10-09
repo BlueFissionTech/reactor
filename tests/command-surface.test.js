@@ -106,11 +106,28 @@ test("command work items present host-supplied allowed decisions", () => {
   assert.equal(item.authorization.reason, "The host accepted the reviewed scope.");
 });
 
-test("command receipts do not infer successful outcomes", () => {
+test("command receipts preserve missing state and outcome as unknown", () => {
   const receipt = createCommandReceipt({ commandId: "resource.update" });
 
-  assert.equal(receipt.state, CommandWorkItemStates.FAILED);
+  assert.equal(receipt.state, CommandWorkItemStates.UNKNOWN);
   assert.equal(receipt.outcome, CommandReceiptOutcomes.UNKNOWN);
+  assert.equal(receipt.effectStatus, "unknown");
+  assert.equal(receipt.recovery.available, false);
+});
+
+test("command receipts fail closed for unsupported states with unknown effects", () => {
+  const receipt = createCommandReceipt({
+    commandId: "resource.update",
+    state: "provider_future_terminal_state",
+    outcome: CommandReceiptOutcomes.EFFECT_UNKNOWN,
+    effectStatus: "unknown"
+  });
+
+  assert.equal(receipt.state, CommandWorkItemStates.UNKNOWN);
+  assert.equal(receipt.outcome, CommandReceiptOutcomes.EFFECT_UNKNOWN);
+  assert.equal(receipt.effectStatus, "unknown");
+  assert.equal(receipt.recovery.available, false);
+  assert.equal(receipt.recovery.mode, "");
 });
 
 test("command receipts normalize reviewed terminal outcomes", () => {

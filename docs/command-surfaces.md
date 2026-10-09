@@ -21,7 +21,7 @@ Controls default to unavailable. A browser or renderer must not infer privileges
 
 Use `createCommandReceipt(...)` for the host's terminal readback. Receipts carry explicit state and outcome values plus optional output, error, diagnostics, evidence references, cancellation data, and recovery data.
 
-The outcome vocabulary covers successful execution, denial, duplicate detection, stale approval, worker crash, budget exhaustion, cancellation, recoverable interruption, and an effect whose result cannot be proven. `effect_unknown` remains distinct from success, failure, and safe retry. Missing cost evidence is represented by `null` and never normalized to zero. Reactor describes what the host reported; it does not retry or recover a command.
+The outcome vocabulary covers successful execution, denial, duplicate detection, stale approval, worker crash, budget exhaustion, cancellation, recoverable interruption, and an effect whose result cannot be proven. `effect_unknown` remains distinct from success, failure, and safe retry. A missing or unsupported receipt state is presented as `unknown`; Reactor does not translate a future provider state into failure. Missing cost evidence is represented by `null` and never normalized to zero. Reactor describes what the host reported; it does not retry or recover a command.
 
 ## Provisional upstream mapping
 

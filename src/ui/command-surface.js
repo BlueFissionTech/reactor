@@ -2,6 +2,7 @@ export const COMMAND_WORK_ITEM_CONTRACT = "reactor.command-work-item/1";
 export const COMMAND_RECEIPT_CONTRACT = "reactor.command-receipt/1";
 
 export const CommandWorkItemStates = Object.freeze({
+  UNKNOWN: "unknown",
   QUEUED: "queued",
   AWAITING_APPROVAL: "awaiting_approval",
   BLOCKED: "blocked",
@@ -86,7 +87,7 @@ export function createCommandReceipt(definition = {}) {
     commandVersion: String(source.commandVersion || ""),
     workItemId: String(source.workItemId || ""),
     receiptId: String(source.receiptId || ""),
-    state: normalizeValue(source.state, terminalStates(), CommandWorkItemStates.FAILED),
+    state: normalizeValue(source.state, terminalStates(), CommandWorkItemStates.UNKNOWN),
     outcome: normalizeValue(source.outcome, Object.values(CommandReceiptOutcomes), CommandReceiptOutcomes.UNKNOWN),
     correlationId: String(source.correlationId || ""),
     causationId: String(source.causationId || ""),
@@ -306,6 +307,7 @@ function createDescriptor(value) {
 
 function terminalStates() {
   return [
+    CommandWorkItemStates.UNKNOWN,
     CommandWorkItemStates.CANCELLED,
     CommandWorkItemStates.SUCCEEDED,
     CommandWorkItemStates.FAILED,
