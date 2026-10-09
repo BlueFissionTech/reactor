@@ -147,6 +147,16 @@ export {
 } from "./ui/surface-contract.js";
 
 export {
+  COMMAND_RECEIPT_CONTRACT,
+  COMMAND_WORK_ITEM_CONTRACT,
+  CommandAuthorizationDecisions,
+  CommandReceiptOutcomes,
+  CommandWorkItemStates,
+  createCommandReceipt,
+  createCommandWorkItem
+} from "./ui/command-surface.js";
+
+export {
   escapeHtml,
   HtmlThemeClasses,
   renderAttributes,

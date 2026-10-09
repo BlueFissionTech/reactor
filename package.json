@@ -13,6 +13,7 @@
     "./module": "./src/core/module.js",
     "./binding-contract": "./src/core/binding-contract.js",
     "./surface-contract": "./src/ui/surface-contract.js",
+    "./command-surface": "./src/ui/command-surface.js",
     "./signals": "./src/core/signals.js",
     "./dom": "./src/dom/binder.js",
     "./dashboard-shell": "./src/ui/dashboard-shell.js",

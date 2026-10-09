@@ -124,6 +124,12 @@ Plugins can extend the module context without forcing a framework choice.
 
 `createBindingContract` describes the expected handoff between host application state and Reactor bindings. It keeps inputs, outputs, events, states, selectors, lifecycle steps, and ownership boundaries inspectable without forcing a renderer or product-specific adapter.
 
+### Command surface contract
+
+`createCommandWorkItem` and `createCommandReceipt` normalize the presentation boundary for command queues and terminal readback. They preserve stable command identifiers, schema references, actor/tenant/delegation display references, correlation and idempotency metadata, explicit authorization previews, available controls, progress, outcomes, diagnostics, cancellation, and recovery references.
+
+The descriptors do not register, authorize, execute, cancel, retry, or recover commands. Host applications and upstream workflow protocols own those semantics. Controls therefore default to unavailable, and renderers must not infer privilege from visible state.
+
 ### Socket lifecycle contract
 
 `createSocketClient` owns browser WebSocket connection state, per-attempt bootstrap, optional reconnect and heartbeat policy, FIFO pre-open queueing, and cleanup. It does not own authentication policy, application message schemas, acknowledgement, replay, deduplication, or exactly-once processing. Those concerns remain behind application and protocol ports.

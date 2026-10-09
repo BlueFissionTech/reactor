@@ -1,0 +1,352 @@
+export const COMMAND_WORK_ITEM_CONTRACT = "reactor.command-work-item/1";
+export const COMMAND_RECEIPT_CONTRACT = "reactor.command-receipt/1";
+
+export const CommandWorkItemStates = Object.freeze({
+  UNKNOWN: "unknown",
+  QUEUED: "queued",
+  AWAITING_APPROVAL: "awaiting_approval",
+  BLOCKED: "blocked",
+  RUNNING: "running",
+  CANCELLING: "cancelling",
+  CANCELLED: "cancelled",
+  SUCCEEDED: "succeeded",
+  FAILED: "failed",
+  RECOVERABLE: "recoverable",
+  EFFECT_UNKNOWN: "effect_unknown"
+});
+
+export const CommandAuthorizationDecisions = Object.freeze({
+  UNKNOWN: "unknown",
+  ALLOWED: "allowed",
+  DENIED: "denied",
+  AWAITING_APPROVAL: "awaiting_approval",
+  STALE: "stale"
+});
+
+export const CommandReceiptOutcomes = Object.freeze({
+  UNKNOWN: "unknown",
+  SUCCEEDED: "succeeded",
+  DENIED: "denied",
+  DUPLICATE: "duplicate",
+  STALE_APPROVAL: "stale_approval",
+  CRASHED: "crashed",
+  BUDGET_EXHAUSTED: "budget_exhausted",
+  CANCELLED: "cancelled",
+  RECOVERABLE: "recoverable",
+  EFFECT_UNKNOWN: "effect_unknown"
+});
+
+export function createCommandWorkItem(definition = {}) {
+  const source = asObject(definition);
+  const item = {
+    contractVersion: source.contractVersion || COMMAND_WORK_ITEM_CONTRACT,
+    commandId: String(source.commandId || ""),
+    commandVersion: String(source.commandVersion || ""),
+    workItemId: String(source.workItemId || ""),
+    implementationRefs: normalizeStringList(source.implementationRefs),
+    label: String(source.label || ""),
+    description: String(source.description || ""),
+    state: normalizeValue(source.state, Object.values(CommandWorkItemStates), CommandWorkItemStates.QUEUED),
+    schemas: {
+      input: normalizeSchemaReference(source.schemas?.input || source.inputSchema),
+      output: normalizeSchemaReference(source.schemas?.output || source.outputSchema)
+    },
+    subject: {
+      actor: normalizeReference(source.subject?.actor || source.actor),
+      principal: normalizeReference(source.subject?.principal || source.principal),
+      tenant: normalizeReference(source.subject?.tenant || source.tenant),
+      delegation: normalizeReference(source.subject?.delegation || source.delegation),
+      authorityMode: String(source.subject?.authorityMode || source.subject?.authority_mode || source.authorityMode || source.authority_mode || "")
+    },
+    correlationId: String(source.correlationId || ""),
+    causationId: String(source.causationId || ""),
+    inputDigest: String(source.inputDigest || ""),
+    inputPayloadRef: String(source.inputPayloadRef || source.input_payload_ref || ""),
+    idempotencyKey: String(source.idempotencyKey || ""),
+    duplicateOf: String(source.duplicateOf || source.duplicate_of || ""),
+    deduplication: normalizeDeduplication(source.deduplication),
+    requestedAt: String(source.requestedAt || source.requested_at || ""),
+    deadlineAt: String(source.deadlineAt || source.deadline_at || ""),
+    authorization: normalizeAuthorization(source.authorization),
+    cancellation: normalizeCancellationRequest(source.cancellation),
+    controls: normalizeControls(source.controls),
+    progress: normalizeProgress(source.progress),
+    explanation: normalizeExplanation(source.explanation),
+    upstream: normalizeUpstreamReference(source.upstream),
+    meta: cloneObject(source.meta)
+  };
+
+  return createDescriptor(item);
+}
+
+export function createCommandReceipt(definition = {}) {
+  const source = asObject(definition);
+  const receipt = {
+    contractVersion: source.contractVersion || COMMAND_RECEIPT_CONTRACT,
+    commandId: String(source.commandId || ""),
+    commandVersion: String(source.commandVersion || ""),
+    workItemId: String(source.workItemId || ""),
+    receiptId: String(source.receiptId || ""),
+    state: normalizeValue(source.state, terminalStates(), CommandWorkItemStates.UNKNOWN),
+    outcome: normalizeValue(source.outcome, Object.values(CommandReceiptOutcomes), CommandReceiptOutcomes.UNKNOWN),
+    correlationId: String(source.correlationId || ""),
+    causationId: String(source.causationId || ""),
+    approvalRef: String(source.approvalRef || ""),
+    authorityCheck: normalizeAuthorityCheck(source.authorityCheck || source.authority_check),
+    effectStatus: normalizeValue(
+      source.effectStatus || source.effect_status,
+      ["not_started", "in_progress", "applied", "not_applied", "partial", "unknown"],
+      "unknown"
+    ),
+    observedAt: String(source.observedAt || source.terminalAt || ""),
+    inputDigest: String(source.inputDigest || ""),
+    idempotencyKey: String(source.idempotencyKey || ""),
+    output: cloneValue(source.output ?? null),
+    error: normalizeError(source.error),
+    diagnostics: normalizeList(source.diagnostics),
+    evidenceRefs: normalizeStringList(source.evidenceRefs || source.evidence_refs),
+    resultRefs: normalizeStringList(source.resultRefs || source.result_refs),
+    outputCounts: normalizeCounts(source.outputCounts || source.output_counts),
+    errorRef: String(source.errorRef || source.error_ref || ""),
+    outcomeSummary: String(source.outcomeSummary || source.outcome_summary || ""),
+    reasonCodes: normalizeStringList(source.reasonCodes || source.reason_codes),
+    provenanceRefs: normalizeStringList(source.provenanceRefs || source.provenance_refs),
+    resourceUsage: normalizeList(source.resourceUsage || source.resource_usage),
+    cost: source.cost ? cloneObject(source.cost) : null,
+    cancellation: {
+      requested: Boolean(source.cancellation?.requested),
+      accepted: Boolean(source.cancellation?.accepted),
+      reason: String(source.cancellation?.reason || "")
+    },
+    recovery: normalizeRecovery(source.recovery),
+    terminalAt: String(source.terminalAt || ""),
+    readback: normalizeExplanation(source.readback),
+    upstream: normalizeUpstreamReference(source.upstream),
+    meta: cloneObject(source.meta)
+  };
+
+  return createDescriptor(receipt);
+}
+
+function normalizeAuthorization(value = {}) {
+  const source = asObject(value);
+
+  return {
+    decision: normalizeValue(source.decision, Object.values(CommandAuthorizationDecisions), CommandAuthorizationDecisions.UNKNOWN),
+    reason: String(source.reason || ""),
+    scope: normalizeStringList(source.scope),
+    approvalId: String(source.approvalId || source.approvalRef || ""),
+    expiresAt: String(source.expiresAt || ""),
+    decidedAt: String(source.decidedAt || ""),
+    revocationCheckedAt: String(source.revocationCheckedAt || ""),
+    revocationStatus: String(source.revocationStatus || ""),
+    policyRefs: normalizeStringList(source.policyRefs),
+    reasonCodes: normalizeStringList(source.reasonCodes)
+  };
+}
+
+function normalizeDeduplication(value = {}) {
+  const source = asObject(value);
+
+  return {
+    originalInvocationId: String(source.originalInvocationId || source.original_invocation_id || ""),
+    originalTenantId: String(source.originalTenantId || source.original_tenant_id || ""),
+    originalCommandId: String(source.originalCommandId || source.original_command_id || ""),
+    originalCommandVersion: String(source.originalCommandVersion || source.original_command_version || ""),
+    originalInputDigest: String(source.originalInputDigest || source.original_input_digest || ""),
+    disposition: normalizeValue(source.disposition, ["reuse", "reject_conflict"], "")
+  };
+}
+
+function normalizeCancellationRequest(value = {}) {
+  const source = asObject(value);
+
+  return {
+    requestedAt: String(source.requestedAt || source.requested_at || ""),
+    requestedBy: String(source.requestedBy || source.requested_by || ""),
+    reasonCode: String(source.reasonCode || source.reason_code || "")
+  };
+}
+
+function normalizeAuthorityCheck(value = {}) {
+  const source = asObject(value);
+
+  return {
+    tenantId: String(source.tenantId || source.tenant_id || ""),
+    status: normalizeValue(source.status, ["not_required", "current", "expired", "revoked", "unknown"], "unknown"),
+    checkedAt: String(source.checkedAt || source.checked_at || ""),
+    approvalRef: String(source.approvalRef || source.approval_ref || ""),
+    reasonCodes: normalizeStringList(source.reasonCodes || source.reason_codes)
+  };
+}
+
+function normalizeRecovery(value = {}) {
+  const source = asObject(value);
+  const checkpointRef = String(source.checkpointRef || source.checkpoint_ref || source.reference || "");
+
+  return {
+    available: Boolean(source.available),
+    reference: checkpointRef,
+    reason: String(source.reason || ""),
+    mode: normalizeValue(source.mode, ["retry", "resume", "compensate"], ""),
+    checkpointRef,
+    retryAfter: String(source.retryAfter || source.retry_after || "")
+  };
+}
+
+function normalizeControls(value = {}) {
+  const source = asObject(value);
+
+  return Object.fromEntries(["approve", "reject", "cancel", "recover", "retry"].map((name) => {
+    const control = source[name];
+    const normalized = typeof control === "boolean" ? { available: control } : asObject(control);
+
+    return [name, {
+      available: Boolean(normalized.available),
+      reason: String(normalized.reason || "")
+    }];
+  }));
+}
+
+function normalizeProgress(value = {}) {
+  const source = asObject(value);
+  const current = finiteNumber(source.current, 0);
+  const total = finiteNumber(source.total, 0);
+
+  return {
+    current,
+    total,
+    ratio: total > 0 ? Math.min(Math.max(current / total, 0), 1) : 0,
+    message: String(source.message || "")
+  };
+}
+
+function normalizeSchemaReference(value = {}) {
+  const source = typeof value === "string" ? { id: value } : asObject(value);
+
+  return {
+    id: String(source.id || source.schemaRef || ""),
+    name: String(source.name || ""),
+    version: String(source.version || ""),
+    mediaType: String(source.mediaType || "application/schema+json"),
+    cardinality: String(source.cardinality || "")
+  };
+}
+
+function normalizeReference(value = {}) {
+  const source = typeof value === "string" ? { id: value } : asObject(value);
+
+  return {
+    id: String(source.id || ""),
+    type: String(source.type || ""),
+    display: String(source.display || "")
+  };
+}
+
+function normalizeExplanation(value = {}) {
+  const source = typeof value === "string" ? { summary: value } : asObject(value);
+
+  return {
+    code: String(source.code || ""),
+    summary: String(source.summary || ""),
+    details: normalizeStringList(source.details),
+    statusRef: String(source.statusRef || ""),
+    visibility: String(source.visibility || ""),
+    updatedAt: String(source.updatedAt || "")
+  };
+}
+
+function normalizeUpstreamReference(value = {}) {
+  const source = asObject(value);
+
+  return {
+    schemaId: String(source.schemaId || ""),
+    schemaVersion: String(source.schemaVersion || ""),
+    contractRef: String(source.contractRef || ""),
+    invocationId: String(source.invocationId || ""),
+    receiptId: String(source.receiptId || ""),
+    verified: Boolean(source.verified)
+  };
+}
+
+function normalizeCounts(value = {}) {
+  const source = asObject(value);
+
+  return Object.fromEntries(Object.entries(source).map(([name, count]) => [
+    name,
+    Math.max(0, Math.trunc(finiteNumber(count, 0)))
+  ]));
+}
+
+function normalizeError(value) {
+  if (!value) {
+    return null;
+  }
+
+  const source = typeof value === "string" ? { message: value } : asObject(value);
+
+  return {
+    code: String(source.code || ""),
+    message: String(source.message || ""),
+    retryable: Boolean(source.retryable),
+    details: cloneObject(source.details)
+  };
+}
+
+function createDescriptor(value) {
+  return {
+    ...value,
+    describe() {
+      return cloneValue(value);
+    },
+    toJSON() {
+      return cloneValue(value);
+    }
+  };
+}
+
+function terminalStates() {
+  return [
+    CommandWorkItemStates.UNKNOWN,
+    CommandWorkItemStates.CANCELLED,
+    CommandWorkItemStates.SUCCEEDED,
+    CommandWorkItemStates.FAILED,
+    CommandWorkItemStates.RECOVERABLE,
+    CommandWorkItemStates.EFFECT_UNKNOWN
+  ];
+}
+
+function normalizeValue(value, allowed, fallback) {
+  return allowed.includes(value) ? value : fallback;
+}
+
+function finiteNumber(value, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function normalizeList(value) {
+  return Array.isArray(value) ? value.map(cloneValue) : [];
+}
+
+function normalizeStringList(value) {
+  if (Array.isArray(value)) return value.map(String);
+  if (value == null || value === "") return [];
+  return [String(value)];
+}
+
+function asObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function cloneObject(value) {
+  return cloneValue(asObject(value));
+}
+
+function cloneValue(value) {
+  if (Array.isArray(value)) return value.map(cloneValue);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, cloneValue(entry)]));
+  }
+  return value;
+}
