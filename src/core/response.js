@@ -19,9 +19,9 @@ export class BlueFissionResponse {
 }
 
 export function normalizeResponse(payload, options = {}) {
-  const statusCode = options.statusCode ?? payload?.statusCode ?? payload?.code ?? 200;
   const raw = payload;
   const parsed = coercePayload(payload);
+  const statusCode = options.statusCode ?? parsed?.statusCode ?? parsed?.code ?? 200;
   const response = {
     ...DEFAULT_RESPONSE,
     ...parsed,

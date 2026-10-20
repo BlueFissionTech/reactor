@@ -36,6 +36,8 @@ const normalized = normalizeResponse(payloadFromDevElation);
 const response = new BlueFissionResponse(payloadFromDevElation);
 ```
 
+Object envelopes and their JSON-string equivalents preserve `statusCode` (or the `code` fallback). An explicit `options.statusCode` takes precedence over either envelope field.
+
 `ok` is recomputed after errors are normalized. That means an endpoint can send `errors` as an array, object, or string and Reactor will expose a stable `errors` array.
 
 ## Service Clients And Gateways
