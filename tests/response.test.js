@@ -45,3 +45,48 @@ test("BlueFissionResponse exposes normalized fields", () => {
   assert.equal(response.data, "saved");
   assert.deepEqual(response.errors, []);
 });
+
+test("object and JSON error envelopes retain their status", () => {
+  const envelope = { statusCode: 422, errors: [], data: null };
+  for (const payload of [envelope, JSON.stringify(envelope)]) {
+    const response = normalizeResponse(payload);
+    assert.equal(response.statusCode, 422);
+    assert.equal(response.ok, false);
+    assert.equal(response.data, null);
+    assert.equal(response.raw, payload);
+  }
+});
+
+test("status overrides and success envelopes retain precedence", () => {
+  for (const envelope of [
+    { statusCode: 201, errors: [] },
+    { code: 201, errors: [] }
+  ]) {
+    for (const payload of [envelope, JSON.stringify(envelope)]) {
+      const response = normalizeResponse(payload);
+      assert.equal(response.statusCode, 201);
+      assert.equal(response.ok, true);
+      const overridden = normalizeResponse(payload, { statusCode: 503 });
+      assert.equal(overridden.statusCode, 503);
+      assert.equal(overridden.ok, false);
+      assert.equal(normalizeResponse(payload, { statusCode: 0 }).statusCode, 0);
+    }
+  }
+});
+
+test("malformed text and JSON null retain existing fallback behavior", () => {
+  for (const payload of ["plain text", '{"statusCode":422']) {
+    const response = normalizeResponse(payload);
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.ok, true);
+    assert.equal(response.status, "Unparsed response");
+    assert.equal(response.data, payload);
+    assert.equal(response.raw, payload);
+  }
+  for (const payload of [null, undefined, "null"]) {
+    const response = normalizeResponse(payload);
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.ok, true);
+    assert.equal(response.data, null);
+  }
+});
